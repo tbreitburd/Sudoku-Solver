@@ -1,0 +1,3 @@
+This is a sudoku solver.
+
+The solver was tested on a multitude of sudokus, which were "borrowed" from the sudoku app on my phone, they have different levels of complexity.
