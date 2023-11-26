@@ -70,10 +70,15 @@ def box(sudoku, row, col):
     # Initialize the list of boxes
     box = np.zeros((3, 3))
     # Get the box values
+    row_start = int(3 * (row - 1))
+    row_end = int(row_start + 3)
+
+    col_start = int(3 * (col - 1))
+    col_end = int(col_start + 3)
 
     # fmt: off
     # This line caused black/flake8 conflicts
-    box = sudoku[1 * row:3 * row, 1 * col:3 * col]
+    box = [sudoku[i][col_start:col_end] for i in range(row_start, row_end)]
     # fmt: on
 
     return box
