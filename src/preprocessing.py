@@ -27,7 +27,7 @@ def load_sudoku(path):
     # Read the sudoku file, and drop the separator lines
     with open(sudoku_path, "r") as f:
         sudoku_rows = f.readlines()
-    sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:10]
+    sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:11]
 
     # Initialize the sudoku array
     sudoku = np.zeros((9, 9), dtype=int)
