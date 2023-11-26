@@ -57,3 +57,23 @@ def load_sudoku(path):
         row = [x for x in row if x != "\n" and x != "|"]
         sudoku[row_num - 1] = row
     return sudoku
+
+
+def box(sudoku, row, col):
+    """!@brief This function takes in a sudoku,
+    and returns a 3x3 array of the sudoku boxes.
+    @details The function takes in a sudoku,
+    and returns a 3x3 array of the sudoku boxes.
+    @param sudoku The sudoku to extract the boxes from.
+    @return A 3x3 array of all the boxes in the sudoku.
+    """
+    # Initialize the list of boxes
+    box = np.zeros((3, 3))
+    # Get the box values
+
+    # fmt: off
+    # This line caused black/flake8 conflicts
+    box = sudoku[1 * row:3 * row, 1 * col:3 * col]
+    # fmt: on
+
+    return box
