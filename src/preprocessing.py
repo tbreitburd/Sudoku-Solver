@@ -55,6 +55,5 @@ def load_sudoku(path):
     # and add the rows to the sudoku array
     for row_num, row in enumerate(sudoku_rows, 1):
         row = [x for x in row if x != "\n" and x != "|"]
-        row = [int(x) for x in row if x != " "]
         sudoku[row_num - 1] = row
     return sudoku
