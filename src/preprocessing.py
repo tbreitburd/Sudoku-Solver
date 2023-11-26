@@ -27,7 +27,26 @@ def load_sudoku(path):
     # Read the sudoku file, and drop the separator lines
     with open(sudoku_path, "r") as f:
         sudoku_rows = f.readlines()
+
+    # Check that the sudoku file has the correct format
+    if len(sudoku_rows) != 11:
+        raise ValueError("The sudoku file has an incorrect number of rows")
+
+    len_rows = [len(char) for char in sudoku_rows]
+    if not all(x == 12 for x in len_rows[:10]):
+        raise ValueError("The sudoku file has an incorrect number of columns")
+
+    if sudoku_rows[3] != "---+---+---\n" and sudoku_rows[7] != "---+---+---\n":
+        raise ValueError("The sudoku file has incorrect separators")
+
+    # Drop the separator lines
     sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:11]
+
+    # Check that the sudoku rows have the correct format
+    InRowSep = [char[3] for char in sudoku_rows]
+    InRowSep2 = [char[7] for char in sudoku_rows]
+    if not all(x == "|" for x in InRowSep + InRowSep2):
+        raise ValueError("The sudoku file has incorrect separators")
 
     # Initialize the sudoku array
     sudoku = np.zeros((9, 9), dtype=int)
@@ -36,5 +55,6 @@ def load_sudoku(path):
     # and add the rows to the sudoku array
     for row_num, row in enumerate(sudoku_rows, 1):
         row = [x for x in row if x != "\n" and x != "|"]
+        row = [int(x) for x in row if x != " "]
         sudoku[row_num - 1] = row
     return sudoku
