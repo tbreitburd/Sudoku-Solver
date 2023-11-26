@@ -1,6 +1,7 @@
 # test preprocessing.py
 from src import preprocessing
 import numpy as np
+import unittest
 
 
 def test_preproc():
@@ -22,3 +23,8 @@ def test_load_sudoku():
             [0, 0, 0, 6, 0, 0, 0, 0, 0],
         ],
     )
+
+
+def test_load_sudoku_2():
+    with unittest.TestCase().assertRaises(ValueError):
+        preprocessing.load_sudoku("sudokus/bad_format_sudoku.txt")
