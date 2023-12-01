@@ -44,4 +44,4 @@ sudoku = [
 
 
 def test_box():
-    assert preprocessing.box(sudoku, 1, 2) == [[0, 0, 7], [0, 0, 9], [0, 5, 0]]
+    assert preprocessing.box(sudoku, 1, 5) == [[0, 0, 7], [0, 0, 9], [0, 5, 0]]

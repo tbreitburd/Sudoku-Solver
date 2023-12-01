@@ -60,20 +60,26 @@ def load_sudoku(path):
 
 
 def box(sudoku, row, col):
-    """!@brief This function takes in a sudoku,
-    and returns a 3x3 array of the sudoku boxes.
-    @details The function takes in a sudoku,
-    and returns a 3x3 array of the sudoku boxes.
-    @param sudoku The sudoku to extract the boxes from.
+    """!@brief This function takes in a sudoku and a cell's row and column,
+    and returns a 3x3 array of the sudoku box that cell is in.
+    @details The function takes in a sudoku and a cell's row and column,
+    and returns a 3x3 array of the sudoku box that cell is in.
+    @param sudoku The sudoku to extract the box from
+    @param row The row of the cell
+    @param col The column of the cell
     @return A 3x3 array of all the boxes in the sudoku.
     """
-    # Initialize the list of boxes
+    # Initialize box array
     box = np.zeros((3, 3))
+    # Identify the box based on the cell
+    box_row = int((row + 3) // 3)
+    box_col = int((col + 3) // 3)
+
     # Get the box values
-    row_start = int(3 * (row - 1))
+    row_start = int(3 * (box_row - 1))
     row_end = int(row_start + 3)
 
-    col_start = int(3 * (col - 1))
+    col_start = int(3 * (box_col - 1))
     col_end = int(col_start + 3)
 
     # fmt: off
