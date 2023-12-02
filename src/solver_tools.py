@@ -43,5 +43,7 @@ def markup(sudoku):
                         + ", hence the sudoku is not solvable"
                     )
                 markup[col][row] = cell_markup
+            else:
+                markup[col][row] = [sudoku[row][col]]
 
     return markup
