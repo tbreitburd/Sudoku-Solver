@@ -36,6 +36,12 @@ def markup(sudoku):
                     and i not in sudoku[:, col]
                     and i not in (np.ravel(pp.box(sudoku, row, col)))
                 ]
+                if cell_markup == []:
+                    raise ValueError(
+                        "There is no possible value for cell "
+                        + "({},{})".format(row, col)
+                        + ", hence the sudoku is not solvable"
+                    )
                 markup[col][row] = cell_markup
 
     return markup
