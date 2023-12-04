@@ -7,7 +7,7 @@ for the sudoku cells.
 @author Created by T.Breitburd on 19/11/2023
 """
 import numpy as np
-from src import preprocessing as pp
+from . import preprocessing as pp
 import pandas as pd
 
 

@@ -12,8 +12,8 @@ import sys
 import configparser as cfg
 import numpy as np
 import pandas as pd
-import preprocessing as preproc
-import solver_tools as st
+from . import preprocessing as preproc
+from . import solver_tools as st
 
 input_file = sys.argv[1]
 
@@ -34,3 +34,5 @@ while not np.array_equal(markup_0.values, markup_1.values):
     if all(x != 0 for x in np.ravel(sudoku[:][:])):
         break
     markup_1 = st.markup(sudoku)
+
+print(sudoku)
