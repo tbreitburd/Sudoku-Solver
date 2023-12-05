@@ -35,4 +35,17 @@ while not np.array_equal(markup_0.values, markup_1.values):
         break
     markup_1 = st.markup(sudoku)
 
-print(sudoku)
+# Bactracking
+
+output_file = config["Output"]["sudoku_easy"]  # Specify the output file path
+
+solved_sudoku_str = preproc.sudoku_to_output_format(
+    sudoku
+)  # Convert the solved sudoku to a string
+
+# Print the solved sudoku to the console
+print(solved_sudoku_str)
+
+# Write the solved sudoku to the output file
+with open(output_file, "w") as file:
+    file.write(solved_sudoku_str)

@@ -88,3 +88,34 @@ def box(sudoku, row, col):
     # fmt: on
 
     return box
+
+
+def sudoku_to_output_format(sudoku):
+    """!@brief This function takes in a sudoku array,
+    and returns a string in the format of the output file.
+    @details This function takes in a sudoku array,
+    and returns a string in the format of the output file.
+    @param sudoku The sudoku to convert to a string
+    @return A string in the format of the output file.
+    """
+    # Initialize the output string
+    sudoku_str = ""
+
+    for row in range(9):
+        for col in range(9):
+            # Convert each cell to a string
+            sudoku_str += str(sudoku[row][col])
+
+            # Add a vertical separator if at the end of a box
+            if col == 2 or col == 5:
+                sudoku_str += "|"
+
+            # Add a newline if at the end of a row,
+            # except at the end of the sudoku
+            elif col == 8 and row != 8:
+                sudoku_str += "\n"
+
+        if row == 2 or row == 5:  # Add a horizontal separator if at row 4 or 7
+            sudoku_str += "---+---+---\n"
+
+    return sudoku_str
