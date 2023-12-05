@@ -20,7 +20,7 @@ input_file = sys.argv[1]
 config = cfg.ConfigParser()
 config.read(input_file)
 
-sudoku = preproc.load_sudoku(config["Input"]["sudoku_easy"])
+sudoku = preproc.load_sudoku(config["Input"]["sudoku2"])
 
 markup_0 = st.markup(sudoku)
 markup_1 = pd.DataFrame(index=range(9), columns=range(9))
@@ -37,7 +37,7 @@ while not np.array_equal(markup_0.values, markup_1.values):
 
 # Bactracking
 
-output_file = config["Output"]["sudoku_easy"]  # Specify the output file path
+output_file = config["Output"]["sudoku2"]  # Specify the output file path
 
 solved_sudoku_str = preproc.sudoku_to_output_format(
     sudoku
