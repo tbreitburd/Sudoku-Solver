@@ -35,7 +35,11 @@ while not np.array_equal(markup_0.values, markup_1.values):
         break
     markup_1 = st.markup(sudoku)
 
-# Bactracking
+# get the indices of markup cells that still have more than one possible value
+backtrack_cells = np.where(markup_1.map(len) > 1)
+# put those in a 2D array
+backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
+
 
 output_file = config["Output"]["sudoku2"]  # Specify the output file path
 
