@@ -22,7 +22,7 @@ config.read(input_file)
 
 
 # Load the sudoku from its txt file to a 9x9 numpy array
-sudoku = preproc.load_sudoku(config["Input"]["sudoku_near_empty"])
+sudoku = preproc.load_sudoku(config["Input"]["sudoku_test"])
 
 # Create a markup dataframe of possible values for the sudoku
 # and initialise a second markup dataframe, to compare the updated markup
@@ -44,24 +44,31 @@ while not np.array_equal(markup_0.values, markup_1.values):
     markup_1 = st.markup(sudoku)
 
 
-# Now get the indexes of the cells that have more than one possible value,
-# based on the markup file, and store them in a numpy array as pairs.
-backtrack_cells = np.where(markup_1.map(len) > 1)
-backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
-
-
-# Now use a backtracking algorithm to solve the sudoku,
-# only going through the possible values listed in the identified cells above.
-# If the algorithm is successful, print the solved sudoku.
-if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
+# If the sudoku is already solved by this point, print it.
+if all(x != 0 for x in np.ravel(sudoku[:][:])):
     solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
     print(solved_sudoku_str)
 else:
-    print("Something went wrong")
+    # If the sudoku is not solved yet, we need to use backtracking.
+    # Now get the indexes of the cells that still have more than
+    # one possible value, based on the markup file,
+    # and store them in a numpy array as pairs.
+    backtrack_cells = np.where(markup_1.map(len) > 1)
+    backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
+
+    # Now use a backtracking algorithm to solve the sudoku,
+    # only going through the possible values listed in the identified cells
+    # above.
+    # If the algorithm is successful, print the solved sudoku.
+    if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
+        solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
+        print(solved_sudoku_str)
+    else:
+        print("Something went wrong")
 
 
 # Finally, write the solved sudoku to the output file
-output_file = config["Output"]["sudoku_near_empty"]
+output_file = config["Output"]["sudoku_test"]
 
 with open(output_file, "w") as file:
     file.write(solved_sudoku_str)
