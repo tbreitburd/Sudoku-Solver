@@ -30,14 +30,25 @@ def load_sudoku(path):
 
     # Check that the sudoku file has the correct format
     if len(sudoku_rows) != 11:
-        raise ValueError("The sudoku file has an incorrect number of rows")
+        raise ValueError(
+            "The sudoku in text form has an incorrect number "
+            + "of rows, should be 11 but is "
+            + str(len(sudoku_rows))
+        )
 
     len_rows = [len(char) for char in sudoku_rows]
     if not all(x == 12 for x in len_rows[:10]):
-        raise ValueError("The sudoku file has an incorrect number of columns")
+        raise ValueError(
+            "The sudoku in text form has an incorrect number "
+            + "of columns, should be 12 but is "
+            + str(len_rows[:10])
+        )
 
     if sudoku_rows[3] != "---+---+---\n" and sudoku_rows[7] != "---+---+---\n":
-        raise ValueError("The sudoku file has incorrect separators")
+        raise ValueError(
+            "The sudoku file has incorrect "
+            + "horizontal separators, must be ---+---+---"
+        )
 
     # Drop the separator lines
     sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:11]
@@ -46,7 +57,9 @@ def load_sudoku(path):
     InRowSep = [char[3] for char in sudoku_rows]
     InRowSep2 = [char[7] for char in sudoku_rows]
     if not all(x == "|" for x in InRowSep + InRowSep2):
-        raise ValueError("The sudoku file has incorrect separators")
+        raise ValueError(
+            "The sudoku file has incorrect vertical separators" + ", must be |"
+        )
 
     # Initialize the sudoku array
     sudoku = np.zeros((9, 9), dtype=int)
