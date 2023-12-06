@@ -35,5 +35,25 @@ unsolvable_sudoku = np.array(
 
 
 def test_markup_3():
-    with unittest.TestCase().assertRaises(ValueError):
+    with unittest.TestCase().assertRaises(RuntimeError):
         solver_tools.markup(unsolvable_sudoku)
+
+
+solved_sudoku = np.array(
+    [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [7, 8, 9, 1, 2, 3, 4, 5, 6],
+        [4, 5, 6, 7, 8, 9, 1, 2, 3],
+        [3, 1, 2, 6, 4, 5, 9, 7, 8],
+        [6, 4, 5, 9, 7, 8, 3, 1, 2],
+        [9, 7, 8, 3, 1, 2, 6, 4, 5],
+        [2, 3, 1, 5, 6, 4, 8, 9, 7],
+        [5, 6, 4, 8, 9, 7, 2, 3, 1],
+        [8, 9, 7, 2, 3, 1, 5, 6, 4],
+    ]
+)
+
+
+def test_markup_4():
+    with unittest.TestCase().assertRaises(RuntimeError):
+        solver_tools.markup(solved_sudoku)

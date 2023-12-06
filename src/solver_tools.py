@@ -3,7 +3,10 @@
 
 @details This module contains tools to solve the sudoku.
 One of them is a function that creates a markup of possible values,
-for the sudoku cells.
+for each remaining empty cell in the sudoku.
+The other is a backtracking algorithm that uses a recursive function
+to solve the sudoku.
+
 @author Created by T.Breitburd on 19/11/2023
 """
 import numpy as np
@@ -17,24 +20,38 @@ def markup(sudoku):
 
     @details This function takes in a sudoku.
     And for each empty cell of that sudoku,
-    lists the possible values for that cell.
+    lists the possible values for that cell, by checking the row, column, and
+    box that cell is in for values that are already present.
     And it returns all these possible values in a dataframe,
     with corresponding row and column indexes.
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+
+    @return A 9x9 dataframe containing lists of possible values for each cell.
     """
+
+    # Check if the sudoku might have multiple solutions, if yes, give a warning
     if np.count_nonzero(sudoku) < 16:
         message = (
             "This sudoku may have multiple solutions,"
             + " and the backtracking algorithm will"
             + " return the first it finds."
         )
-        warnings.warn(message, UserWarning)  # Chose to use a warning,
-        # as the User should know but it
-        # is not a critical error.
+        warnings.warn(message, UserWarning)
 
+    # Check if the sudoku is already solved, if yes, raise an error
     if all(x != 0 for x in np.ravel(sudoku[:][:])):
-        raise ValueError("All cells are filled, the sudoku is already solved")
+        # fmt: off
+        raise RuntimeError("All cells are filled, " +
+                           "the sudoku is already solved")
+        # fmt: on
 
+    # Create a dataframe to store the markup
     markup = pd.DataFrame(index=range(9), columns=range(9))
+
+    # Loop through the sudoku, and for each empty cell,
+    # check the row, column, and box that cell is in for values that are
+    # already present, then list the possible values for that cell.
     for row in range(9):
         for col in range(9):
             if sudoku[row][col] == 0:
@@ -45,30 +62,47 @@ def markup(sudoku):
                     and i not in sudoku[:, col]
                     and i not in (np.ravel(pp.box(sudoku, row, col)))
                 ]
+
+                # If there are no possible values for the cell, raise an error
                 if cell_markup == []:
-                    raise ValueError(
+                    raise RuntimeError(
                         "There is no possible value for cell "
                         + "({},{})".format(row, col)
                         + ", hence the sudoku is not solvable"
                     )
+
+                # Put the possible values in the markup dataframe
                 markup[col][row] = cell_markup
             else:
+                # If the cell is not empty, put the cell value in the markup
+                # This is to avoid having NaN values in the markup dataframe.
                 markup[col][row] = [sudoku[row][col]]
 
     return markup
 
 
 def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
-    """!@brief Sudoku solving backtrack algorithm,
-    using a recursive function format.
+    """!@brief Backtracking algorithm to solve the sudoku,
+    using a recursive function.
 
     @details This function takes a sudoku in array form,
     the associated markup dataframe of possible values for the sudoku cells,
     a list of the cells that we need to backtrack through from that markup,
     the cell number we are currently looking at within that list,
     and returns a solved sudoku, if possible.
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+    @param markup_ A 9x9 dataframe containing lists of possible values
+    for each cell.
+    @param backtrack_cells A numpy array containing the indexes of the cells
+    that still have more than one possible value, in that markup file.
+    @param cell_num The index of the current cell we are looking at,
+    within the backtrack_cells list.
+
+    @return A boolean, True if the sudoku is solved,
+    False if it is still not solved.
     """
-    # The recursive function method was learned from this webpage,
+    # The recursive function method was used from this webpage,
     # as well as the subapges linked to it:
     # https://www.geeksforgeeks.org/introduction-to-recursion-data-structure
     # -and-algorithm-tutorials/?ref=lbp
@@ -109,7 +143,7 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     # If this happens at cell_num = 0, then the sudoku is not solvable.
     if valid_cell_vals == []:
         if cell_num == 0:
-            print(
+            raise RuntimeError(
                 "The sudoku is not solvable, already solved, or there may "
                 + "be a disagreement between the arguments, i.e. not being "
                 + "associated, check the arguments are from the same sudoku."
