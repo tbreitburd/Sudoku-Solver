@@ -130,7 +130,7 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
         # If this line fails at cell_num + 1, we will simply "come back" to
         # this loop, and try the next value in the list of valid values.
         # T
-        if backtrack_alg(sudoku, cell_num + 1):
+        if backtrack_alg(sudoku, markup_, backtrack_cells, cell_num + 1):
             return True
 
         # If the recursive call returns False, then we need to backtrack as
