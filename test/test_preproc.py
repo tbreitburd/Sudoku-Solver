@@ -4,10 +4,6 @@ import numpy as np
 import unittest
 
 
-def test_preproc():
-    assert preprocessing.test(2) == 3
-
-
 def test_load_sudoku():
     np.array_equal(
         preprocessing.load_sudoku("sudokus/sudoku1.txt"),
