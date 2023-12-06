@@ -15,7 +15,7 @@ empty_sudoku = np.zeros((9, 9), dtype=int)
 
 
 def test_markup_2():
-    with unittest.TestCase().assertRaises(ValueError):
+    with unittest.TestCase().assertWarns(UserWarning):
         solver_tools.markup(empty_sudoku)
 
 

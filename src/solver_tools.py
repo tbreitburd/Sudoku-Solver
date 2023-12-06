@@ -7,6 +7,7 @@ for the sudoku cells.
 @author Created by T.Breitburd on 19/11/2023
 """
 import numpy as np
+import warnings
 from . import preprocessing as pp
 import pandas as pd
 
@@ -20,8 +21,16 @@ def markup(sudoku):
     And it returns all these possible values in a dataframe,
     with corresponding row and column indexes.
     """
-    if all(x == 0 for x in np.ravel(sudoku[:][:])):
-        raise ValueError("The sudoku is empty")
+    if np.count_nonzero(sudoku) < 16:
+        message = (
+            "This sudoku may have multiple solutions,"
+            + " and the backtracking algorithm will"
+            + " return the first it finds."
+        )
+        warnings.warn(message, UserWarning)  # Chose to use a warning,
+        # as the User should know but it
+        # is not a critical error.
+
     if all(x != 0 for x in np.ravel(sudoku[:][:])):
         raise ValueError("All cells are filled, the sudoku is already solved")
 
@@ -29,9 +38,6 @@ def markup(sudoku):
     for row in range(9):
         for col in range(9):
             if sudoku[row][col] == 0:
-                # print(sudoku[row, :])
-                # print(sudoku[:, col])
-                # print(np.ravel(pp.box(sudoku, row, col)))
                 cell_markup = [
                     i
                     for i in range(1, 10)
@@ -105,7 +111,7 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
         if cell_num == 0:
             print(
                 "The sudoku is not solvable, already solved, or there may "
-                + "be a disagreement between the arguments and them not being "
+                + "be a disagreement between the arguments, i.e. not being "
                 + "associated, check the arguments are from the same sudoku."
             )
         return False
@@ -140,6 +146,6 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
         sudoku[backtrack_cells[cell_num][1]][backtrack_cells[cell_num][0]] = 0
 
     # If we have tried all the valid values for the current cell,
-    # and none of them worked, then we need to backtrack. This lines is
+    # and none of them worked, then we need to backtrack. This line is
     # what makes the if statement in the loop above work as intended.
     return False
