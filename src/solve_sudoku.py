@@ -20,11 +20,19 @@ input_file = sys.argv[1]
 config = cfg.ConfigParser()
 config.read(input_file)
 
-sudoku = preproc.load_sudoku(config["Input"]["sudoku2"])
 
+# Load the sudoku from its txt file to a 9x9 numpy array
+sudoku = preproc.load_sudoku(config["Input"]["sudoku_near_empty"])
+
+# Create a markup dataframe of possible values for the sudoku
+# and initialise a second markup dataframe, to compare the updated markup
+# with the first one.
 markup_0 = st.markup(sudoku)
 markup_1 = pd.DataFrame(index=range(9), columns=range(9))
 
+
+# We want to put any unique possible value that the markup finds in the sudoku.
+# And update the markup following that change, until the markup doesn't change.
 while not np.array_equal(markup_0.values, markup_1.values):
     markup_0 = st.markup(sudoku)
     for row in range(9):
@@ -35,12 +43,16 @@ while not np.array_equal(markup_0.values, markup_1.values):
         break
     markup_1 = st.markup(sudoku)
 
-# get the indices of markup cells that still have more than one possible value
+
+# Now get the indexes of the cells that have more than one possible value,
+# based on the markup file, and store them in a numpy array as pairs.
 backtrack_cells = np.where(markup_1.map(len) > 1)
-# put those in a 2D array
 backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 
 
+# Now use a backtracking algorithm to solve the sudoku,
+# only going through the possible values listed in the identified cells above.
+# If the algorithm is successful, print the solved sudoku.
 if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
     solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
     print(solved_sudoku_str)
@@ -48,8 +60,8 @@ else:
     print("Something went wrong")
 
 
-output_file = config["Output"]["sudoku2"]  # Specify the output file path
+# Finally, write the solved sudoku to the output file
+output_file = config["Output"]["sudoku_near_empty"]
 
-# Write the solved sudoku to the output file
 with open(output_file, "w") as file:
     file.write(solved_sudoku_str)
