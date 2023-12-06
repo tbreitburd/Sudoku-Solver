@@ -41,14 +41,14 @@ backtrack_cells = np.where(markup_1.map(len) > 1)
 backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 
 
+if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
+    solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
+    print(solved_sudoku_str)
+else:
+    print("Something went wrong")
+
+
 output_file = config["Output"]["sudoku2"]  # Specify the output file path
-
-solved_sudoku_str = preproc.sudoku_to_output_format(
-    sudoku
-)  # Convert the solved sudoku to a string
-
-# Print the solved sudoku to the console
-print(solved_sudoku_str)
 
 # Write the solved sudoku to the output file
 with open(output_file, "w") as file:
