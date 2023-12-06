@@ -18,7 +18,7 @@ input_file = sys.argv[1]
 
 
 def solve_sudoku(input_file):
-    input_path = "sudokus/" + input_file
+    input_path = input_file
     # Load the sudoku from its txt file to a 9x9 numpy array
     sudoku = preproc.load_sudoku(input_path)
 
@@ -65,7 +65,8 @@ def solve_sudoku(input_file):
             print("Something went wrong")
 
     # Finally, write the solved sudoku to the output file
-    output_path = "sudoku_solutions/" + input_file
+    output_file = input_file.split("/")[-1]
+    output_path = "sudoku_solutions/" + output_file
 
     with open(output_path, "w") as file:
         file.write(solved_sudoku_str)
