@@ -1,0 +1,6 @@
+\contentsline {section}{\numberline {0.1}Short Introduction}{2}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Selection of Solution Algorithm and Prototyping}{2}{section.0.2}%
+\contentsline {section}{\numberline {0.3}Development, Experimentation and Profiling}{2}{section.0.3}%
+\contentsline {section}{\numberline {0.4}Validation, Unit Tests and CI set up}{2}{section.0.4}%
+\contentsline {section}{\numberline {0.5}Packaging and Usability}{2}{section.0.5}%
+\contentsline {section}{\numberline {0.6}Summary}{2}{section.0.6}%
