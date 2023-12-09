@@ -119,22 +119,21 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
 
     # Get the sudoku-valid values for the current cell, from the sudoku array,
     # using the same conditions as in the markup function
+    # fmt: off
     valid_cell_vals = [
         x
         for x in backtrack_cell_vals
         if x not in sudoku[backtrack_cells[cell_num][1], :]
         and x not in sudoku[:, backtrack_cells[cell_num][0]]
-        and x
-        # fmt: off
-        not in (
-            np.ravel(
-                pp.box(
-                    sudoku,
-                    backtrack_cells[cell_num][1],
-                    backtrack_cells[cell_num][0]
-                )
-            )
-        )
+        and x not in (
+                    np.ravel(
+                            pp.box(
+                                    sudoku,
+                                    backtrack_cells[cell_num][1],
+                                    backtrack_cells[cell_num][0]
+                                    )
+                            )
+                    )
         # fmt: on
     ]
 
@@ -169,7 +168,6 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
         # if the sudoku can be solved with this current cell's trial value.
         # If this line fails at cell_num + 1, we will simply "come back" to
         # this loop, and try the next value in the list of valid values.
-        # T
         if backtrack_alg(sudoku, markup_, backtrack_cells, cell_num + 1):
             return True
 
