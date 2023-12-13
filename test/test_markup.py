@@ -1,3 +1,17 @@
+"""!@file test_markup.py
+
+@brief Module containing tests for the markup function of the solver_tools
+module.
+
+@details This module contains tests for the markup function of the solver_tools
+module. The markup function is used to generate a markup of a given sudoku.
+The markup is a 3D array of shape (9, 9, number of possible values) where the
+first two dimensionsvcorrespond to the rows and columns of the sudoku and
+the third dimensioncontains a list of possible values for each cell of the
+sudoku.
+
+@author Created by T.Breitburd on 01/12/2023
+"""
 from src import solver_tools, preprocessing
 import unittest
 import numpy as np

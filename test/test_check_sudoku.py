@@ -2,7 +2,12 @@
 @brief Module containing tests for the check_sudoku function of the
 solver_tools module.
 
-@details
+@details This module contains tests for the check_sudoku function of the
+solver_tools module. The check_sudoku function is used to check whether a
+given sudoku is valid or not. The function returns a tuple containing a
+boolean value and a string. The boolean value is True if the sudoku is valid
+and False if it is not. The string is empty if the sudoku is valid and
+contains an error message if it is not.
 
 @author Created by T.Breitburd on 13/12/2023
 """
