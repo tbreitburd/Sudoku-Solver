@@ -1,18 +1,130 @@
-"""!@file solver_tools.py
-@brief Module containing tools for solving the sudoku.
-
-@details This module contains tools to solve the sudoku.
-One of them is a function that creates a markup of possible values,
-for each remaining empty cell in the sudoku.
-The other is a backtracking algorithm that uses a recursive function
-to solve the sudoku.
-
-@author Created by T.Breitburd on 19/11/2023
-"""
+import cProfile
+import pstats
+import io
+import os
 import numpy as np
-import warnings
-from . import preprocessing as pp
 import pandas as pd
+import warnings
+
+input_file = "sudokus/sudoku1.txt"
+
+
+def load_sudoku(path):
+    """!@brief Load the sudoku txt file into a useable array
+
+    @details This function takes in a path to a sudoku txt file,
+    reads the file into a series of strings for each row,
+    checks that the file has the correct format,
+    then picks out the numbers from the strings, dropping the separators,
+    and returns a 9x9 numpy array of the sudoku.
+
+    @param path Path to the sudoku txt file
+
+    @return A 9x9 numpy array containing the sudoku numbers
+    """
+    # We use os to have relative paths be portable
+    proj_dir = os.getcwd()
+    sudoku_path = os.path.join(proj_dir, path)
+
+    # Read the sudoku file, and drop the separator lines
+    try:
+        f = open(sudoku_path, "r")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            "The sudoku file was not found at the path: " + sudoku_path
+        )
+
+    sudoku_rows = f.readlines()
+
+    # Check that the sudoku file has the correct format:
+    # There should be 11 rows
+    if len(sudoku_rows) != 11:
+        raise ValueError(
+            "The sudoku in text form has an incorrect number "
+            + "of rows, should be 11 but is "
+            + str(len(sudoku_rows))
+        )
+    # 12 columns for the first 9 rows (9 + 2 separators + new line character)
+    len_rows = [len(char) for char in sudoku_rows]
+    if not all(x == 12 for x in len_rows[:10]):
+        raise ValueError(
+            "The sudoku in text form has an incorrect number "
+            + "of columns, should be 12 but is "
+            + str(len_rows[:10])
+        )
+    # horizontal separators should be "---+---+---\n"
+    if sudoku_rows[3] != "---+---+---\n" and sudoku_rows[7] != "---+---+---\n":
+        raise ValueError(
+            "The sudoku file has incorrect "
+            + "horizontal separators, must be ---+---+---"
+        )
+
+    # Drop the horizontal separator lines
+    sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:11]
+
+    # Check that the sudoku rows have the correct format,
+    # with vertical separators at specific positions
+    InRowSep = [char[3] for char in sudoku_rows]
+    InRowSep2 = [char[7] for char in sudoku_rows]
+    if not all(x == "|" for x in InRowSep + InRowSep2):
+        raise ValueError(
+            "The sudoku file has incorrect vertical separators" + ", must be |"
+        )
+
+    # Initialize the sudoku array
+    sudoku = np.zeros((9, 9), dtype=int)
+
+    # Remove the "new line" characters and the vertical separators,
+    # and add those rows to the sudoku array
+    for row_num, row in enumerate(sudoku_rows, 1):
+        row = [x for x in row if x != "\n" and x != "|"]
+        sudoku[row_num - 1] = row
+    return sudoku
+
+
+def box(sudoku, row, col):
+    """!@brief This function takes in a sudoku and a cell's row and column,
+    and returns a 3x3 array of the sudoku box that cell is in.
+
+    @details The function takes in a sudoku and a cell's row and column,
+    and returns a 3x3 array of the sudoku box that cell is in.
+
+    @param sudoku The sudoku to extract the box from
+    @param row The row of the cell, 0 indexed
+    @param col The column of the cell, 0 indexed
+
+    @return A 3x3 array of the corresponding box.
+    """
+    # Check that the cell coordinates are valid
+    if row < 0 or row > 8 or col < 0 or col > 8:
+        raise ValueError(
+            "The cell coordinates are not valid, "
+            + "must be between 0 and 8 inclusive but:"
+            + "Row: "
+            + str(row)
+            + ", Col: "
+            + str(col)
+        )
+
+    # Initialize box array
+    box = np.zeros((3, 3))
+    # Identify the box's box-coordinates (tuples of 1, 2 or 3)
+    box_row = int((row + 3) // 3)
+    box_col = int((col + 3) // 3)
+
+    # Get the box values
+    row_start = int(3 * (box_row - 1))
+    row_end = int(row_start + 3)
+
+    col_start = int(3 * (box_col - 1))
+    col_end = int(col_start + 3)
+
+    # fmt: off
+    # This line caused black/flake8 conflicts
+    box = [sudoku[i][col_start:col_end] for i in range(row_start, row_end)]
+    # fmt: on
+
+    return box
 
 
 def check_sudoku(sudoku):
@@ -40,7 +152,7 @@ def check_sudoku(sudoku):
                            + " {}'s in column {}".format(j, i + 1))
                 return False, message
             for k in [1, 5, 8]:
-                if np.count_nonzero((np.ravel(pp.box(sudoku, i, k)) == j)) > 1:
+                if np.count_nonzero((np.ravel(box(sudoku, i, k)) == j)) > 1:
                     message = (
                         "There are too many "
                         + "{}'s in box ".format(j)
@@ -76,7 +188,8 @@ def markup(sudoku):
         warnings.warn(message, UserWarning)
 
     # Check if the sudoku is already solved, if yes, raise an error
-    if all(x != 0 for x in np.ravel(sudoku[:][:])):
+    sudoku_vals = set(np.ravel(sudoku[:][:]))
+    if all(x != 0 for x in sudoku_vals):
         # fmt: off
         raise RuntimeError("All cells are filled, " +
                            "the sudoku is already solved")
@@ -93,13 +206,14 @@ def markup(sudoku):
             if sudoku[row][col] == 0:
                 set_row = set(sudoku[row, :])
                 set_col = set(sudoku[:, col])
-                set_box = set(np.ravel(pp.box(sudoku, row, col)))
+                set_box = set(np.ravel(box(sudoku, row, col)))
                 # fmt: off
                 cell_markup = [
                     i for i in range(1, 10)
                     if i not in (set_row | set_col | set_box)
                 ]
                 # fmt: on
+
                 # If there are no possible values for the cell, raise an error
                 if cell_markup == []:
                     raise RuntimeError(
@@ -157,16 +271,22 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     # Get the sudoku-valid values for the current cell, from the sudoku array,
     # using the same conditions as in the markup function
     # fmt: off
-    set_row = set(sudoku[backtrack_cells[cell_num][1], :])
-    set_col = set(sudoku[:, backtrack_cells[cell_num][0]])
-    set_box = set(np.ravel(pp.box(sudoku,
-                                  backtrack_cells[cell_num][1],
-                                  backtrack_cells[cell_num][0])))
     valid_cell_vals = [
-        x for x in backtrack_cell_vals
-        if x not in (set_row | set_col | set_box)
+        x
+        for x in backtrack_cell_vals
+        if x not in sudoku[backtrack_cells[cell_num][1], :]
+        and x not in sudoku[:, backtrack_cells[cell_num][0]]
+        and x not in (
+                    np.ravel(
+                            box(
+                                    sudoku,
+                                    backtrack_cells[cell_num][1],
+                                    backtrack_cells[cell_num][0]
+                                    )
+                            )
+                    )
+        # fmt: on
     ]
-    # fmt: on
 
     # If there are no valid values for the current cell, return False
     # This will trigger the backtracking, when at a level cell_num + 1.
@@ -212,3 +332,23 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     # and none of them worked, then we need to backtrack. This line is
     # what makes the if statement in the loop above work as intended.
     return False
+
+
+sudoku = load_sudoku(input_file)
+
+pr = cProfile.Profile()
+pr.enable()
+
+markup1 = markup(sudoku)
+
+pr.disable()
+s = io.StringIO()
+sortby = "cumulative"
+ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+ps.print_stats()
+print(s.getvalue())
+
+with open("profile.txt", "w+") as file:
+    file.write(s.getvalue())
+
+print(markup1)
