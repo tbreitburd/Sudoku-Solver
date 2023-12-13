@@ -128,7 +128,7 @@ def solve_sudoku(input_file, backtracking_type):
 
 start = time.time()
 
-solve_sudoku(input_file)
+solve_sudoku(input_file, backtracking_type)
 
 end = time.time()
 
