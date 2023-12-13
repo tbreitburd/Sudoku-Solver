@@ -22,6 +22,14 @@ def solve_sudoku(input_file):
     # Load the sudoku from its txt file to a 9x9 numpy array
     sudoku = preproc.load_sudoku(input_path)
 
+    # Check if the sudoku is valid
+    valid, message = st.check_sudoku(sudoku)
+    if not valid:
+        # fmt: off
+        raise RuntimeError("The sudoku is not valid at loading time: "
+                           + message)
+        # fmt: on
+
     # Create a markup dataframe of possible values for the sudoku
     # and initialise a second markup dataframe, to compare the updated markup
     # with the first one.
@@ -42,6 +50,14 @@ def solve_sudoku(input_file):
             break
         markup_1 = st.markup(sudoku)
 
+    # Check if the sudoku is valid after the marking up
+    valid, message = st.check_sudoku(sudoku)
+    if not valid:
+        # fmt: off
+        raise RuntimeError("The sudoku is no longer valid after markup: "
+                           + message)
+        # fmt: on
+
     # If the sudoku is already solved by this point, print it.
     if all(x != 0 for x in np.ravel(sudoku[:][:])):
         solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
@@ -61,8 +77,13 @@ def solve_sudoku(input_file):
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
             solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
             print(solved_sudoku_str)
-        else:
-            print("Something went wrong")
+
+    # Check if the sudoku is valid after the backtracking
+    valid, message = st.check_sudoku(sudoku)
+    if not valid:
+        raise RuntimeError(
+            "The sudoku is no longer valid after backtracking: " + message
+        )
 
     # Finally, write the solved sudoku to the output file
     output_file = input_file.split("/")[-1]
