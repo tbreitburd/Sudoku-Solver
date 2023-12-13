@@ -15,6 +15,46 @@ from . import preprocessing as pp
 import pandas as pd
 
 
+def check_sudoku(sudoku):
+    """!@brief Check if the sudoku is valid.
+
+    @details This function takes in a sudoku,
+    and checks if it is valid, i.e. only values in between 1 and 9,
+    and maximum one of each per row, column and box
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+
+    @return A boolean, True if the sudoku is valid, False if it is not.
+    And a string, containing a message explaining why the sudoku is not valid.
+    """
+
+    # Check if the sudoku only contains numbers between 0 and 9
+    if any(x not in range(10) for x in np.ravel(sudoku)):
+        return False, "The sudoku contains numbers outside of 0-9"
+
+    # Check if there are too many of the same number in a row, column or box
+    # fmt: off
+    for i in range(9):
+        for j in range(1, 10):
+            if np.count_nonzero((sudoku[i, :] == j)) > 1:
+                message = "There are too many {}'s in row {}".format(j, i + 1)
+                return False, message
+            if np.count_nonzero((sudoku[:, i] == j)) > 1:
+                message = ("There are too many"
+                           + " {}'s in column {}".format(j, i + 1))
+                return False, message
+            for k in [1, 5, 8]:
+                if np.count_nonzero((np.ravel(pp.box(sudoku, i, k)) == j)) > 1:
+                    message = (
+                        "There are too many "
+                        + "{}'s in box ".format(j)
+                        + "[{},{}]".format((i // 3) + 1, (k // 3) + 1)
+                    )
+                    return False, message
+    # fmt: on
+    return True, "_"
+
+
 def markup(sudoku):
     """!@brief Create a markup for the sudoku.
 
