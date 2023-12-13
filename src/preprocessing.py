@@ -31,8 +31,14 @@ def load_sudoku(path):
     sudoku_path = os.path.join(proj_dir, path)
 
     # Read the sudoku file, and drop the separator lines
-    with open(sudoku_path, "r") as f:
-        sudoku_rows = f.readlines()
+    try:
+        f = open(sudoku_path, "r")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            "The sudoku file was not found at the path: " + sudoku_path
+        )
+
+    sudoku_rows = f.readlines()
 
     # Check that the sudoku file has the correct format:
     # There should be 11 rows
