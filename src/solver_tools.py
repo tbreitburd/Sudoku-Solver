@@ -13,6 +13,8 @@ import numpy as np
 import warnings
 from . import preprocessing as pp
 import pandas as pd
+import sys
+import traceback
 
 
 def check_sudoku(sudoku):
@@ -65,22 +67,37 @@ def markup(sudoku):
 
     @return A 9x9 dataframe containing lists of possible values for each cell.
     """
+    try:
+        # Check if the sudoku might have multiple solutions,
+        # if yes, give a warning
+        if np.count_nonzero(sudoku) < 16:
+            message = (
+                "This sudoku may have multiple solutions,"
+                + " and the backtracking algorithm will"
+                + " return the first it finds."
+            )
+            warnings.warn(message, UserWarning)
 
-    # Check if the sudoku might have multiple solutions, if yes, give a warning
-    if np.count_nonzero(sudoku) < 16:
-        message = (
-            "This sudoku may have multiple solutions,"
-            + " and the backtracking algorithm will"
-            + " return the first it finds."
-        )
-        warnings.warn(message, UserWarning)
+            # fmt: on
+    except UserWarning as e:
+        print("Traceback: ")
+        traceback.print_exc()
+        print("Warning:")
+        print(e)
 
-    # Check if the sudoku is already solved, if yes, raise an error
-    if all(x != 0 for x in np.ravel(sudoku[:][:])):
-        # fmt: off
-        raise RuntimeError("All cells are filled, " +
-                           "the sudoku is already solved")
-        # fmt: on
+    try:
+        # Check if the sudoku is already solved, if yes, raise an error
+        if all(x != 0 for x in np.ravel(sudoku[:][:])):
+            # fmt: off
+            raise RuntimeError("All cells are filled, "
+                               + "the sudoku is already solved")
+    except RuntimeError as e:
+        print("Traceback: ")
+        traceback.print_stack()
+        print("Error: ")
+        print(e)
+        print("Exiting program")
+        sys.exit(1)
 
     # Create a dataframe to store the markup
     markup = pd.DataFrame(index=range(9), columns=range(9))
@@ -100,13 +117,22 @@ def markup(sudoku):
                     if i not in (set_row | set_col | set_box)
                 ]
                 # fmt: on
-                # If there are no possible values for the cell, raise an error
-                if cell_markup == []:
-                    raise RuntimeError(
-                        "There is no possible value for cell "
-                        + "({},{})".format(row, col)
-                        + ", hence the sudoku is not solvable"
-                    )
+                try:
+                    # If there are no possible values for the cell,
+                    # raise an error
+                    if cell_markup == []:
+                        raise RuntimeError(
+                            "There is no possible value for cell "
+                            + "({},{})".format(row, col)
+                            + ", hence the sudoku is not solvable"
+                        )
+                except RuntimeError as e:
+                    print("Traceback: ")
+                    traceback.print_stack()
+                    print("Error: ")
+                    print(e)
+                    print("Exiting program")
+                    sys.exit(1)
 
                 # Put the possible values in the markup dataframe
                 markup[col][row] = cell_markup
@@ -171,14 +197,23 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     # If there are no valid values for the current cell, return False
     # This will trigger the backtracking, when at a level cell_num + 1.
     # If this happens at cell_num = 0, then the sudoku is not solvable.
-    if valid_cell_vals == []:
-        if cell_num == 0:
-            raise RuntimeError(
-                "The sudoku is not solvable, already solved, or there may "
-                + "be a disagreement between the arguments, i.e. not being "
-                + "associated, check the arguments are from the same sudoku."
-            )
-        return False
+    try:
+        if valid_cell_vals == []:
+            if cell_num == 0:
+                raise RuntimeError(
+                    "The sudoku is not solvable, already solved, or there "
+                    + "may be a disagreement between the arguments, i.e. "
+                    + "not being associated, check the arguments are "
+                    + "from the same sudoku."
+                )
+            return False
+    except RuntimeError as e:
+        print("Traceback: ")
+        traceback.print_stack()
+        print("Error: ")
+        print(e)
+        print("Exiting program")
+        sys.exit(1)
 
     # Now we loop through those valid values, and trying them in the sudoku.
     # It is within this loop that the recursion happens. The within loop

@@ -36,9 +36,15 @@ backtrack_cells = np.where(markup1.map(len) > 1)
 backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 
 
-def test_backtrack():
-    with unittest.TestCase().assertRaises(RuntimeError):
-        solver_tools.backtrack_alg(sudoku_solved, markup1, backtrack_cells, 0)
+# fmt: off
+class TestBacktrack(unittest.TestCase):
+    def test_backtrack(self):
+        with self.assertRaises(SystemExit) as context:
+            solver_tools.backtrack_alg(sudoku_solved, markup1,
+                                       backtrack_cells, 0)
+
+        self.assertEqual(context.exception.code, 1)
+# fmt: on
 
 
 sudoku2 = np.array(

@@ -28,11 +28,6 @@ def test_markup():
 empty_sudoku = np.zeros((9, 9), dtype=int)
 
 
-def test_markup_2():
-    with unittest.TestCase().assertWarns(UserWarning):
-        solver_tools.markup(empty_sudoku)
-
-
 unsolvable_sudoku = np.array(
     [
         [0, 0, 0, 0, 0, 0, 1, 2, 3],
@@ -46,11 +41,6 @@ unsolvable_sudoku = np.array(
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
 )
-
-
-def test_markup_3():
-    with unittest.TestCase().assertRaises(RuntimeError):
-        solver_tools.markup(unsolvable_sudoku)
 
 
 solved_sudoku = np.array(
@@ -68,6 +58,22 @@ solved_sudoku = np.array(
 )
 
 
-def test_markup_4():
-    with unittest.TestCase().assertRaises(RuntimeError):
-        solver_tools.markup(solved_sudoku)
+class TestMarkup(unittest.TestCase):
+    def test_markup_2(self):
+        # Test that a certain input triggers SystemExit with exit code 1
+        with self.assertWarns(UserWarning):
+            solver_tools.markup(empty_sudoku)
+
+    def test_markup_3(self):
+        with self.assertRaises(SystemExit) as context:
+            solver_tools.markup(unsolvable_sudoku)
+
+        # Check the exit code
+        self.assertEqual(context.exception.code, 1)
+
+    def test_markup_4(self):
+        with self.assertRaises(SystemExit) as context:
+            solver_tools.markup(solved_sudoku)
+
+        # Check the exit code
+        self.assertEqual(context.exception.code, 1)
