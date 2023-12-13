@@ -14,6 +14,7 @@ import pandas as pd
 from . import preprocessing as preproc
 from . import solver_tools as st
 import time
+import os
 
 input_file = sys.argv[1]
 
@@ -87,8 +88,13 @@ def solve_sudoku(input_file):
         )
 
     # Finally, write the solved sudoku to the output file
+    # creating the output directory if it doesn't exist yet
     output_file = input_file.split("/")[-1]
-    output_path = "sudoku_solutions/" + output_file
+    output_dir = "sudoku_solutions"
+    output_path = os.path.join(output_dir, output_file)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     with open(output_path, "w") as file:
         file.write(solved_sudoku_str)
