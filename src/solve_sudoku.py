@@ -17,9 +17,10 @@ import time
 import os
 
 input_file = sys.argv[1]
+backtracking_type = sys.argv[2]
 
 
-def solve_sudoku(input_file):
+def solve_sudoku(input_file, backtracking_type):
     input_path = input_file
     # Load the sudoku from its txt file to a 9x9 numpy array
     sudoku = preproc.load_sudoku(input_path)
@@ -70,21 +71,32 @@ def solve_sudoku(input_file):
         # one possible value, based on the markup file,
         # and store them in a numpy array as pairs.
         backtrack_cells = np.where(markup_1.map(len) > 1)
-        backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 
-        # Sort these cells by the number of possible values they have,
-        # in ascending order.
-        # This is to make the backtracking more efficient.
-        # From https://learnpython.com/blog/python-custom-sort-function/
-        def sorting_key(cell):
-            return len(markup_1[cell[1]][cell[0]])
+        # fmt: off
+        if backtracking_type == "forward":
+            # Simply go from left to right, top to bottom
+            backtrack_cells = np.array([backtrack_cells[1],
+                                        backtrack_cells[0]]).T
+        elif backtracking_type == "backward":
+            # Go from right to left, bottom to top
+            backtrack_cells = np.array([backtrack_cells[1],
+                                        backtrack_cells[0]]).T[::-1]
+        elif backtracking_type == "ordered":
+            # Sort these cells by the number of possible values they have,
+            # in ascending order.
+            # This is to possibly make the backtracking algorithm faster.
+            # From https://learnpython.com/blog/python-custom-sort-function/
+            def sorting_key(cell):
+                return len(markup_1[cell[1]][cell[0]])
+        # fmt: on
 
-        backtrack_cells = sorted(backtrack_cells, key=sorting_key)
+            backtrack_cells = sorted(backtrack_cells, key=sorting_key)
 
-        # Now use a backtracking algorithm to solve the sudoku,
+        # Now use the backtracking algorithm to solve the sudoku,
         # only going through the possible values listed in the identified cells
         # above.
         # If the algorithm is successful, print the solved sudoku.
+        # Otherwise the backtracking algorithm will raise an error
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
             solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
             print(solved_sudoku_str)
