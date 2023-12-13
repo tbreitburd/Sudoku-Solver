@@ -96,10 +96,15 @@ def solve_sudoku(input_file, backtracking_type):
         # only going through the possible values listed in the identified cells
         # above.
         # If the algorithm is successful, print the solved sudoku.
-        # Otherwise the backtracking algorithm will raise an error
+        # Otherwise the backtracking algorithm will either raise an error or
+        # return False, in which case we raise an error.
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
             solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
             print(solved_sudoku_str)
+        else:
+            print("The backtracking algorithm failed to solve the sudoku. " +
+                  "Please try a different backtracking type. " +
+                  "if the issue persists, the sudoku may be unsolvable.")
 
     # Check if the sudoku is valid after the backtracking
     valid, message = st.check_sudoku(sudoku)
