@@ -91,14 +91,15 @@ def markup(sudoku):
     for row in range(9):
         for col in range(9):
             if sudoku[row][col] == 0:
+                set_row = set(sudoku[row, :])
+                set_col = set(sudoku[:, col])
+                set_box = set(np.ravel(pp.box(sudoku, row, col)))
+                # fmt: off
                 cell_markup = [
-                    i
-                    for i in range(1, 10)
-                    if i not in sudoku[row, :]
-                    and i not in sudoku[:, col]
-                    and i not in (np.ravel(pp.box(sudoku, row, col)))
+                    i for i in range(1, 10)
+                    if i not in (set_row | set_col | set_box)
                 ]
-
+                # fmt: on
                 # If there are no possible values for the cell, raise an error
                 if cell_markup == []:
                     raise RuntimeError(
@@ -156,22 +157,16 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     # Get the sudoku-valid values for the current cell, from the sudoku array,
     # using the same conditions as in the markup function
     # fmt: off
+    set_row = set(sudoku[backtrack_cells[cell_num][1], :])
+    set_col = set(sudoku[:, backtrack_cells[cell_num][0]])
+    set_box = set(np.ravel(pp.box(sudoku,
+                                  backtrack_cells[cell_num][1],
+                                  backtrack_cells[cell_num][0])))
     valid_cell_vals = [
-        x
-        for x in backtrack_cell_vals
-        if x not in sudoku[backtrack_cells[cell_num][1], :]
-        and x not in sudoku[:, backtrack_cells[cell_num][0]]
-        and x not in (
-                    np.ravel(
-                            pp.box(
-                                    sudoku,
-                                    backtrack_cells[cell_num][1],
-                                    backtrack_cells[cell_num][0]
-                                    )
-                            )
-                    )
-        # fmt: on
+        x for x in backtrack_cell_vals
+        if x not in (set_row | set_col | set_box)
     ]
+    # fmt: on
 
     # If there are no valid values for the current cell, return False
     # This will trigger the backtracking, when at a level cell_num + 1.

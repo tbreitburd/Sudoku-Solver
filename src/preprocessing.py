@@ -125,7 +125,7 @@ def box(sudoku, row, col):
 
     # fmt: off
     # This line caused black/flake8 conflicts
-    box = [sudoku[i][col_start:col_end] for i in range(row_start, row_end)]
+    box = sudoku[row_start:row_end, col_start:col_end]
     # fmt: on
 
     return box
