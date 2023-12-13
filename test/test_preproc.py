@@ -1,4 +1,35 @@
-# test preprocessing.py
+"""!@file test_preproc.py
+
+@brief Module containing tests for the preprocessing module.
+
+@details This module contains tests for the preprocessing module. The
+preprocessing module contains functions used to preprocess a sudoku before
+solving it. The preprocessing module contains the following functions:
+load_sudoku, box, sudoku_to_output_format.
+
+The load_sudoku function is used to load a sudoku from a text file. The text
+file must contain 9 lines of 9 characters each. Each character must be a digit
+between 0 and 9. The digit 0 represents an empty cell in the sudoku.
+
+The box function is used to extract a 3x3 box from a sudoku. The box is
+specified by its row and column number.
+
+The sudoku_to_output_format function is used to convert a sudoku to a string
+with the following format:
+000|007|000
+000|009|504
+000|050|169
+---+---+---
+080|000|305
+075|000|290
+406|000|080
+---+---+---
+762|080|000
+103|900|000
+000|600|000
+
+@author Created by T.Breitburd on 26/11/2023
+"""
 from src import preprocessing
 import numpy as np
 import unittest

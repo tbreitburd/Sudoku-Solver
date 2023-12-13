@@ -19,18 +19,14 @@ def check_sudoku(sudoku):
     """!@brief Check if the sudoku is valid.
 
     @details This function takes in a sudoku,
-    and checks if it is valid, i.e. only values in between 1 and 9,
-    and maximum one of each per row, column and box
+    and checks if it is valid, i.e. a maximum of one of each number
+    in each row, column and box.
 
     @param sudoku A 9x9 numpy array containing the sudoku numbers
 
     @return A boolean, True if the sudoku is valid, False if it is not.
     And a string, containing a message explaining why the sudoku is not valid.
     """
-
-    # Check if the sudoku only contains numbers between 0 and 9
-    if any(x not in range(10) for x in np.ravel(sudoku)):
-        return False, "The sudoku contains numbers outside of 0-9"
 
     # Check if there are too many of the same number in a row, column or box
     # fmt: off
