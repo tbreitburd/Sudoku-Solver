@@ -15,6 +15,31 @@ from . import preprocessing as pp
 import pandas as pd
 
 
+def check_sudoku(sudoku):
+    """!@brief Check if the sudoku is valid.
+
+    @details This function takes in a sudoku,
+    and checks if it is valid, i.e. only values in between 1 and 9,
+    and maximum one of each per row, column and box
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+
+    @return A boolean, True if the sudoku is valid, False if it is not.
+    """
+
+    # Check if the sudoku only contains numbers between 0 and 9
+    if any(x not in range(10) for x in np.ravel(sudoku)):
+        return False
+
+    # Check if there are no duplicates in each row
+
+    # Check if there are no duplicates in each column
+
+    # Check if there are no duplicates in each box
+
+    return True
+
+
 def markup(sudoku):
     """!@brief Create a markup for the sudoku.
 
