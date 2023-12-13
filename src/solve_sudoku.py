@@ -72,6 +72,15 @@ def solve_sudoku(input_file):
         backtrack_cells = np.where(markup_1.map(len) > 1)
         backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 
+        # Sort these cells by the number of possible values they have,
+        # in ascending order.
+        # This is to make the backtracking more efficient.
+        # From https://learnpython.com/blog/python-custom-sort-function/
+        def sorting_key(cell):
+            return len(markup_1[cell[1]][cell[0]])
+
+        backtrack_cells = sorted(backtrack_cells, key=sorting_key)
+
         # Now use a backtracking algorithm to solve the sudoku,
         # only going through the possible values listed in the identified cells
         # above.
