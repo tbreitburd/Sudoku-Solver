@@ -1,37 +1,39 @@
-"""!@file solve_sudoku.py
-@brief This file contains the main sudoku solving code. .
+"""!@file perf_timer.py
 
-@details Using functions from modules ...,
-it takes in a sudoku in txt format (with specific formatting),
-solves it using ...,
-and returns the solved sudoku in the same format as the input.
-@author Created by T.Breitburd on 19/11/2023
+@brief This file contains the code to time the performance of the
+backtracking algorithm, for different types of backtracking.
+
+@details Using functions from modules preprocessing.py and solver_tools.py,
+it takes in a csv file containing a list of sudokus,
+and times the performance of the backtracking algorithm
+for each sudoku, for three different types of backtracking:
+forward, backward and ordered.
+
+The sudokus are solved using the backtracking algorithm,
+and the time taken to solve each sudoku is recorded.
+The average time taken for each type of backtracking is then printed.
+
+@author Created by T.Breitburd on 14/12/2023
 """
 
-import sys
+from . import solver_tools as st
 import numpy as np
 import pandas as pd
-from . import preprocessing as preproc
-from . import solver_tools as st
 import time
-import os
-
-input_file = sys.argv[1]
-backtracking_type = sys.argv[2]
 
 
-def solve_sudoku(input_file, backtracking_type):
-    input_path = input_file
-    # Load the sudoku from its txt file to a 9x9 numpy array
-    sudoku = preproc.load_sudoku(input_path)
+def solve_for_timing(sudoku, backtracking_type):
+    """!@brief Solve the sudoku.
 
-    # Check if the sudoku is valid
-    valid, message = st.check_sudoku(sudoku)
-    if not valid:
-        # fmt: off
-        raise RuntimeError("The sudoku is not valid at loading time: "
-                           + message)
-        # fmt: on
+    @details This function takes in a sudoku,
+    and solves it using the backtracking algorithm.
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+    @param backtracking_type A string, either "forward", "backward" or
+    "ordered", specifying the type of backtracking to use.
+
+    @return None
+    """
 
     # Create a markup dataframe of possible values for the sudoku
     # and initialise a second markup dataframe, to compare the updated markup
@@ -63,8 +65,7 @@ def solve_sudoku(input_file, backtracking_type):
 
     # If the sudoku is already solved by this point, print it.
     if all(x != 0 for x in np.ravel(sudoku[:][:])):
-        solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
-        print(solved_sudoku_str)
+        return None
     else:
         # If the sudoku is not solved yet, we need to use backtracking.
         # Now get the indexes of the cells that still have more than
@@ -100,37 +101,44 @@ def solve_sudoku(input_file, backtracking_type):
         # Otherwise the backtracking algorithm will either raise an error or
         # return False, in which case we raise an error.
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
-            solved_sudoku_str = preproc.sudoku_to_output_format(sudoku)
-            print(solved_sudoku_str)
+            return None
         else:
-            print("The backtracking algorithm failed to solve the sudoku. " +
-                  "Please try a different backtracking type. " +
-                  "if the issue persists, the sudoku may be unsolvable.")
-
-    # Check if the sudoku is valid after the backtracking
-    valid, message = st.check_sudoku(sudoku)
-    if not valid:
-        raise RuntimeError(
-            "The sudoku is no longer valid after backtracking: " + message
-        )
-
-    # Finally, write the solved sudoku to the output file
-    # creating the output directory if it doesn't exist yet
-    output_file = input_file.split("/")[-1]
-    output_dir = "sudoku_solutions"
-    output_path = os.path.join(output_dir, output_file)
-
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    with open(output_path, "w") as file:
-        file.write(solved_sudoku_str)
+            return None
 
 
-start = time.time()
+# Read sudokus from sudokus.csv, and store them in a dataframe
+sudokus_df = pd.read_csv("sudokus/sudokus.csv", header=None)
+time_forward = []
+time_backward = []
+time_ordered = []
 
-solve_sudoku(input_file, backtracking_type)
 
-end = time.time()
+# Iterate over each sudoku
+for backtracking_type in ["forward", "backward", "ordered"]:
+    for sudoku_str in sudokus_df[0]:
+        # Convert the string representation of the sudoku to a 9x9 numpy array
+        sudoku = np.array([int(char) for char in sudoku_str]).reshape((9, 9))
 
-print(f"Elapsed time: {end - start} seconds")
+        # Solve the sudoku using the three types of backtracking, and time it
+        start_time = time.time()
+        solution = solve_for_timing(sudoku, backtracking_type)
+        end_time = time.time()
+
+        duration = end_time - start_time
+
+        if backtracking_type == "forward":
+            time_forward.append(duration)
+        elif backtracking_type == "backward":
+            time_backward.append(duration)
+        elif backtracking_type == "ordered":
+            time_ordered.append(duration)
+
+# fmt: off
+# Print the average time taken for each type of backtracking
+print("Average time taken for forward backtracking: " +
+      str(np.mean(time_forward)))
+print("Average time taken for backward backtracking: " +
+      str(np.mean(time_backward)))
+print("Average time taken for ordered backtracking: " +
+      str(np.mean(time_ordered)))
+# fmt: on
