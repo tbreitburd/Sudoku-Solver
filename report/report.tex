@@ -16,6 +16,7 @@
 \usepackage[super]{nth}
 \usepackage{fancyhdr}
 \usepackage{tikz}
+\usepackage{cite}
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
@@ -125,6 +126,9 @@
     {\end{examplebox}}
 
 \geometry{top=1.5in} % Adjust the value as needed
+% ----------------------------------------------------------------
+
+
 
 \begin{document}
 
@@ -133,9 +137,9 @@
   \vspace*{2cm}
   {\LARGE\bfseries Report for C1 Research Computing Coursework\par}
   \vspace{1cm}
-  {\Large\itshape Written by Thomas Breitburd\par}
+  {\Large\itshape\ CRSiD:\ tmb76\par}
   \vspace{1cm}
-  {\Large\itshape University of Cambridge\par}
+  {\Large\itshape\ University of Cambridge\par}
   \vfill
   {\large\today\par}
 \end{titlepage}
@@ -144,19 +148,90 @@
 
 \newpage
 
-\section{Short Introduction}
+\chapter{Introduction}
 
-In this report, an overview of the developping process of a python sudoku solver is given. The aim is to detail the software development of the solver, delving into the experimentation as well as how the code was improved, beyond it functioning as intended. The solver relies on a non-naïve backtracking algorithm. First covered, will be a rational of the choice of solving algorithm and the prototyping of said solver. Then, a larger section will describe the actual development of the code, what issues were encountered and how they were solved. This will include profiling, after the solver is finished to deal with any performance bottlenecks. Beyond the development of the solver, the report will also cover the validation and unit testing of the code, which ensures the code is robust.       Finally, the report will cover the packaging of the code and the usability of the solver.
+In this report, an overview of the developping process of a python sudoku solver is given. The aim is to detail the software development of the solver, delving into the experimentation as well as how the code was improved, beyond it functioning as intended. The solver relies on a non-naïve backtracking algorithm. First covered, will be a rational of the choice of solving algorithm and the prototyping of said solver. Then, a larger section will describe the actual development of the code, where the prototyping was wrong, and what solutions were found. This will include profiling, after the solver was finished, to deal with any performance bottlenecks. Beyond the development of the solver, the report will also cover the validation and unit testing of the code, which ensures the code is robust. Finally, the report will cover how the code was packaged and the useability of the solver.
 
-\section{Selection of Solution Algorithm and Prototyping}
 
-\section{Development, Experimentation and Profiling}
+\chapter{Solving Algorithm and Prototyping}
+
+\section{Solving a Sudoku Puzzle}
+
+When solving a sudoku using brain-power, one has multiple technics they can use. Most simple is to go through each cell, and using the sudoku constraints, eliminate impossible values, and hopefully find that there exists only one possible value for the cell. Then, if the sudoku is easy enough, a large part of the cells can be filled in this way as finding the solution to one cell may ``unlock'' another and so on. This can be referred to as the candidate-checking method\cite{cornell_sudoku}.
+But there usually comes a point where that process is no longer sufficient. From there, a tedious but very useful option is to mark up the possible values of each cell, and then spend a varying amount of time finding impossibilities of some of those possible by picturing future scenarios, similar to chess. This is where the average human brain has difficulties, and where a computer performs very well.
+
+\section{Backtracking Algorithm}
+
+A backtracking algorithm is the formal name of the process described above\cite{cornell_sudoku}.
+In its most naïve form, it can be described as follows:
+
+\begin{enumerate}
+  \item Go through each cell (in a chosen order).
+  \item In the current cell, enumerate from 1 to 9, until:
+  \subitem{a.} A value is found that is valid.
+  \subitem{b.} 9 is reached, and no valid value is found.
+  \item In case of 2.a., go to the next cell and start again from 2.
+  \item In case of 2.b., go back to the previous cell and try the next value.
+
+\end{enumerate}
+
+The backtracking algorithm is a simple algorithm to understand and implement. It has the guarantee of finding a solution if one exists.
+
+It is a brute-force algorithm, it does not use any heuristics to find the solution faster. It simply iterates through all possible combinations of values, until it finds one that is valid based on the initial clues.
+
+Because it is simple, it is also simple to make sure it is doing things correctly. It is easy to check that the algorithm is doing what it is supposed to do, and that it is doing it correctly. This is important for the validation of the code, which will be covered later.
+
+However, it is naïve. In other words, this version does not really take into account the constraints of the sudoku. So it will go through all possible combinations of values, even if it is obvious that some of them are not valid. In terms of code, this would mean running a check on the validity of the cell trial value each time we try one. To avoid this, we can use the constraints of the sudoku to mark up each cell with the possible values, as one would on paper, and then only try out those values.
+
+Furthermore, as discussed above, the candidate checking method can be used to eliminate the ``obvious'' cells, that only have one possible value.
+
+It so happens that by marking up the sudoku, we implicitely use the candidate checking method, as we can see which cells have only one possible value.
+
+Thus, we can combine the candidate checking method and the backtracking algorithm to create a hopefully more efficient algorithm. This would then look like:
+
+\begin{enumerate}
+  \item Markup the sudoku with the possible values of each cell.
+  \item If the cell has only one possible value, fill it in.
+  \item Go back to step 1 and repeat until no more cells can be filled in.
+  \item Start going through each cell (in a chosen order).
+  \item In the current cell, enumerate through the possible values for that cell, until:
+  \subitem{a.} A value is found that is valid.
+  \subitem{b.} all values have been tried and none were valid
+  \item In case of 5.a., go to the next cell and start again from 5
+  \item In case of 5.b., go back to the previous cell and try the next value.
+\end{enumerate}
+
+
+\section{Prototyping}
+
+
+
+
+\chapter{Development, Experimentation and Profiling}
+
+\section{Development}
+
+\subsection{Markup}
+The markup function is the first function that was developed.
+
+\subsection{Candidate Checking}
+To implement the candidate checking method, the markup function simply implemented in a loop whose condition was that the markup DataFrame no longer changed.
+
+\subsection{Backtracking}
+
+Another crack in the backtracking algorithm is for sudoku's that have multiple solutions. In that case, the solution it finds is simply a matter of what order the backtracking algorithm tries the values in. This means it will only find one solution, and only that one everytime. Making the assumption that the user may be simply interested in just solving the sudoku puzzle they have, a warning was added to the solver, to let the user know that the sudoku may have multiple solutions, and just one of them will be given.
+
+\section{Profiling}
 
 \section{Validation, Unit Tests and CI set up}
+
+A check\_sudoku function was written to check that the sudoku is valid. It checks that each row, column and box, and that there are no duplicates.
 
 \section{Packaging and Usability}
 
 \section{Summary}
 
+\bibliographystyle{plain}
+\bibliography{refs.bib}
 
 \end{document}
