@@ -19,10 +19,10 @@
 \usepackage{cite}
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
-\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{startstop} = [rectangle, rounded corners, text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, text centered, draw=black, fill=green!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
 % Define the header and footer for general pages
@@ -181,43 +181,89 @@ In its most naïve form, it can be described as follows:
 
 \vspace*{1\baselineskip}
 This algorithm has a few advantages. It is a rather simple algorithm to understand, for that reason it should also be relatively simple to implement in code. It offers the guarantee of finding a solution, if one exists, eventually. It can even solve an empty grid, though it will only find one solution out of the 6,670,903,752,021,072,936, 960 possible solutions\cite{cornell_sudoku3}. More on dealing with multiple solutions later.
-But being one of the simplest algorithms, there are also reasons why one would use another algorithm. It is a brute-force algorithm, it does not use any heuristics to find the solution faster. It simply iterates through all possible combinations of values, until it finds one that is valid based on the already filled cells. In general, its speed is dependent on the number of empty cells, and the number of possible values for each of those cells. Interestingly, because of it being so consistent in its method, one can develop a board that is specifically made to be ``difficult'' for this algorithm.
+But being one of the simplest algorithms, there are also reasons why one would use another algorithm. It is a brute-force algorithm, it does not use any heuristics to find the solution faster. It simply iterates through all possible combinations of values, until it finds one that is valid based on the already filled cells. In general, its speed is dependent on the number of empty cells, and the number of possible values for each of those cells. Interestingly, because of it iterating through the above described steps consistently, one can develop a board that is specifically made to be ``difficult'' for this algorithm. In the context of general newspaper sudoku puzzles, it comes down to chance whether the algorithm will be fast or slow. Moreover, it is naïve. This version will test all values from 1 to 9, even when one case may only have 2 possible values. The complexity of the algorithm is then $\mathcal{O}(9^{N_{empty cells}})$, where $N_{empty cells}$ is the number of empty cells in the sudoku. This is a very large number, and so the algorithm is very slow for sudokus with many empty cells.
+So rather than wait until it is iterating through the cells, the algorithm could take note of what values are possible for each cell, and then only iterate through those values. This only means doing the validity assessment before the backtracking algorithm, rather than during it. But this means reducing the number of iterations, and so reducing the time it takes to find a solution.
 
-However, it is naïve. In other words, this version does not really take into account the constraints of the sudoku. So it will go through all possible combinations of values, even if it is obvious that some of them are not valid. In terms of code, this would mean running a check on the validity of the cell trial value each time we try one. To avoid this, we can use the constraints of the sudoku to mark up each cell with the possible values, as one would on paper, and then only try out those values.
+\section{Modified Backtracking Algorithm}
 
-Furthermore, as discussed above, the candidate checking method can be used to eliminate the ``obvious'' cells, that only have one possible value.
+Bringing back our attention to the candidate checking method, we know that we can identify ``obvious'' values for cells, and fill them in. Noting that to do so, we have to mark up the possible values for each cell. We can therefore use a modified backtracking algorithm that uses the candidate checking method prior to backtracking, to reduce the overall complexity of the algorithm (Maximum $\mathcal{O}(N_{v}^{N_{empty cells}})$, where $N_{v}$ is the number of possible value for each cell, and $N_{v}\leq 9$).
 
-It so happens that by marking up the sudoku, we implicitely use the candidate checking method, as we can see which cells have only one possible value.
+\begin{definitionbox}{Modified Backtracking Algorithm with candidate checking for a 9$\times$9 Sudoku}
 
-Thus, we can combine the candidate checking method and the backtracking algorithm to create a hopefully more efficient algorithm. This would then look like:
+  \begin{enumerate}
+    \item Markup the sudoku with the possible values for each cell.
+    \item If the cell has only one possible value, fill it in.
+    \item Go back to step 1 and repeat until no more cells can be filled in, i.e.\ the markup does not change.
+    \item Start going through each cell (in a chosen order).
+    \item In the current cell, enumerate through the possible values for that cell, until:
+    \subitem{a.} A value is found that is valid.
+    \subitem{b.} All values have been tried and none were valid.
+    \item In case of 5.a., go to the next cell and start again from Step 5.
+    \item In case of 5.b., go back to the previous cell and, following from Step 5., try the next value.
+  \end{enumerate}
 
-\begin{enumerate}
-  \item Markup the sudoku with the possible values of each cell.
-  \item If the cell has only one possible value, fill it in.
-  \item Go back to step 1 and repeat until no more cells can be filled in.
-  \item Start going through each cell (in a chosen order).
-  \item In the current cell, enumerate through the possible values for that cell, until:
-  \subitem{a.} A value is found that is valid.
-  \subitem{b.} all values have been tried and none were valid
-  \item In case of 5.a., go to the next cell and start again from 5
-  \item In case of 5.b., go back to the previous cell and try the next value.
-\end{enumerate}
+\end{definitionbox}
 
-
+\newpage
 \section{Prototyping}
 
+The first idea of what the solver's code would look like was something like this:
 
+\begin{figure}[bthp]
+  \centering
+  \includegraphics[width=\textwidth]{prototyping1.png}
+  \caption{First prototyping of the solver}
+\end{figure}
+
+\begin{figure}[bthp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{prototyping1_next.png}
+  \caption{First prototyping of the solver (continued)}
+\end{figure}
+
+\newpage
+The solver would be runnable from the command line like so:
+
+\begin{lstlisting}[language=bash]
+  python solve_sudoku.py parameter.ini
+\end{lstlisting}
+
+Where the \texttt{parameter.ini} file contains groups of parameters, mainly the input file paths. Which parameters to use would be specified in the main \texttt{solve\_sudoku.py} file. Bearing in mind that the sudokus must be in a \texttt{.txt} file, with the following format, with 0's representing empty cells:
+
+\vspace*{1\baselineskip}
+\begin{lstlisting}[language=bash]
+  020|000|000
+  000|083|400
+  090|000|000
+  ---+---+---
+  000|800|000
+  600|009|000
+  000|000|093
+  ---+---+---
+  000|100|000
+  000|054|000
+  070|000|000
+\end{lstlisting}
+
+\vspace*{1\baselineskip}
+Using the \texttt{sys} package, the file path would be passed to the \texttt{load\_sudoku()} function, which would read the sudoku from the file path and drop out the separator rows and vertical lines, place the remaining 9 rows of 9 digits into a numpy array. Some checks would be done to ensure the sudoku \texttt{.txt} format is respected. Any infringement would simply make the program stop and print an appropriate error message. There is no point in continuing or trying to correct the mistakes as that could lead to solving a different sudoku than the one the solver's user was intending to solve.
+Following this preprocessing step, the markup of the sudoku would be created. The \texttt{markup()} function would simply look at each cell in the sudoku and, applying sudoku rules, determine what values are allowed. It is relatively easy to check the row and the column the cell is in. However, checking the 3$\times$3 box the cell is in is a bit more complicated. For this, a \texttt(box()) function would be created to, given the cell row and column number, return the values of the 3$\times$3 box the cell is in. The \texttt{markup()} function would then use this function to check the box the cell is in. Finally, we use a Pandas DataFrame to put the markup values in, as their number may vary for each cell, and a Pandas DataFrame allows for that, being structure like a dictionary, where a Numpy Array doesn't.
+The candidate searching part of the solver would consist of repeating the marking up of the sudoku, inputing of values in cells that only have one possible value, and so on until the markup no longer changes.
+Then comes the backtracking part of the solver. Following the steps set out in the modified backtracking algorithm, the solver would go through each cell, and try each possible value for that cell, based on the markup. If it finds a valid one, it goes to the next still empty cell and starts trying out values again. If it doesn't find one, it goes back to the previous cell and tries the next value. If it reaches the end of the possible values for the first cell, it means that the sudoku is unsolvable. The \texttt{tryout()} function would take in the cell location and the markup DataFrame, and return the first valid value it finds. Then it would be placed in a recursive loop that would go through each cell, and try out values until it finds a solution, or until it reaches the end of the possible values for the first cell. The until part would be handled by a \texttt{while} loop, that would check the cell location.
+From there the solved sudoku would outputed by printing it to the command line.
 
 
 \chapter{Development, Experimentation and Profiling}
 
-\section{Development}
+\section{Development and experimentation}
 
-\subsection{Markup}
-The markup function is the first function that was developed.
+\subsection{Markup and Box functions}
+
+The \texttt{box()} function was written first to simply split the sudoku into its 9 boxes and return all of them. This would mean unnecessary memory use, so the function was changed to take in the row and column number of the box we wanted (e.g.\ the top right box would be box(1,3)), and return just that one. However, that meant figuring out which box the cell was in, from its coordinates, before calling the \texttt{box} function. Because that would be somewhat messy since the \texttt{box()} function would be called in multiple places, it was then changed to simply take in the cell coordinates and return the box the cell is in.
+In its first version, the \texttt{markup()} function would go through each unfilled cell and get the possible values for that cell, putting these in the markup dataframe, at the same coordinates. One problem, which came up when moving on to the candidate checking part of the solver, was that the markup dataframe contained NaN values, for the cells that were already filled. This would cause issues when comparing the markup dataframes when checking if the markup had changed. So, though it was not the most elegant fix, the \texttt{markup()} function was changed to fill in the already filled cells' locations in the markup with those values. In the context of the candidate checking loop, this meant that when updating the sudoku, the values of the cells that were already filled would be overwritten with the same values.
 
 \subsection{Candidate Checking}
-To implement the candidate checking method, the markup function simply implemented in a loop whose condition was that the markup DataFrame no longer changed.
+To implement the candidate checking method, the markup function simply implemented in a loop whose condition was that the markup DataFrame no longer changed. Now it was entirely possible that candidate checking was a sufficient method to solve the easier sudokus, in which case an already solved sudoku would be given to the backtracking algorithm. So a break condition was added to the code, to return the solved sudoku if the sudoku no longer had empty ($=0$) cells.
 
 \subsection{Backtracking}
 
@@ -225,13 +271,39 @@ Another crack in the backtracking algorithm is for sudoku's that have multiple s
 
 \section{Profiling}
 
-\section{Validation, Unit Tests and CI set up}
+%https://stackoverflow.com/questions/1518346/optimizing-the-backtracking-algorithm-solving-sudoku for the choice to test other orders of backtracking, and for future improvements
+
+%972|853|614
+%146|279|538
+%583|146|729
+%---+---+---
+%624|718|953
+%817|395|462
+%359|462|871
+%---+---+---
+%798|621|345
+%265|934|187
+%431|587|296
+%Elapsed time: 17843.329435825348 seconds
+
+\chapter{Validation, Unit Tests and CI set up}
+
+\section{Validation}
 
 A check\_sudoku function was written to check that the sudoku is valid. It checks that each row, column and box, and that there are no duplicates.
 
-\section{Packaging and Usability}
+\section{Unit Tests}
 
-\section{Summary}
+\section{CI set up}
+
+\chapter{Packaging and Usability}
+
+\section{Packaging}
+
+\section{Usability}
+
+
+\chapter{Summary}
 
 \bibliographystyle{plain}
 \bibliography{refs.bib}
