@@ -1,10 +1,40 @@
+"""!@file perf_timer.py
+
+@brief This file contains the code to time the performance of the
+backtracking algorithm, for different types of backtracking.
+
+@details Using functions from modules preprocessing.py and solver_tools.py,
+it takes in a csv file containing a list of sudokus,
+and times the performance of the backtracking algorithm
+for each sudoku, for three different types of backtracking:
+forward, backward and ordered.
+
+The sudokus are solved using the backtracking algorithm,
+and the time taken to solve each sudoku is recorded.
+The average time taken for each type of backtracking is then printed.
+
+@author Created by T.Breitburd on 14/12/2023
+"""
+
 from . import solver_tools as st
 import numpy as np
 import pandas as pd
 import time
 
 
-def solve_sudoku(sudoku, backtracking_type):
+def solve_for_timing(sudoku, backtracking_type):
+    """!@brief Solve the sudoku.
+
+    @details This function takes in a sudoku,
+    and solves it using the backtracking algorithm.
+
+    @param sudoku A 9x9 numpy array containing the sudoku numbers
+    @param backtracking_type A string, either "forward", "backward" or
+    "ordered", specifying the type of backtracking to use.
+
+    @return None
+    """
+
     # Create a markup dataframe of possible values for the sudoku
     # and initialise a second markup dataframe, to compare the updated markup
     # with the first one.
@@ -76,7 +106,7 @@ def solve_sudoku(sudoku, backtracking_type):
             return None
 
 
-# Read sudokus from sudokus.csv
+# Read sudokus from sudokus.csv, and store them in a dataframe
 sudokus_df = pd.read_csv("sudokus/sudokus.csv", header=None)
 time_forward = []
 time_backward = []
@@ -86,12 +116,12 @@ time_ordered = []
 # Iterate over each sudoku
 for backtracking_type in ["forward", "backward", "ordered"]:
     for sudoku_str in sudokus_df[0]:
-        sudoku = np.array([int(char) for char in sudoku_str]).reshape((9, 9))
         # Convert the string representation of the sudoku to a 9x9 numpy array
-        # Solve the sudoku using the three types of backtracking
+        sudoku = np.array([int(char) for char in sudoku_str]).reshape((9, 9))
 
+        # Solve the sudoku using the three types of backtracking, and time it
         start_time = time.time()
-        solution = solve_sudoku(sudoku, backtracking_type)
+        solution = solve_for_timing(sudoku, backtracking_type)
         end_time = time.time()
 
         duration = end_time - start_time
