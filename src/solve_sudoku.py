@@ -87,9 +87,10 @@ def solve_sudoku(input_file, backtracking_type):
             # This is to possibly make the backtracking algorithm faster.
             # From https://learnpython.com/blog/python-custom-sort-function/
             def sorting_key(cell):
-                return len(markup_1[cell[1]][cell[0]])
+                return len(markup_1[cell[0]][cell[1]])
+            backtrack_cells = np.array([backtrack_cells[1],
+                                        backtrack_cells[0]]).T
         # fmt: on
-
             backtrack_cells = sorted(backtrack_cells, key=sorting_key)
 
         # Now use the backtracking algorithm to solve the sudoku,
