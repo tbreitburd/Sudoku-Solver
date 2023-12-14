@@ -87,32 +87,32 @@
 \lstset{style=mystyle}
 
 % Definition of the tcolorbox for definitions
-\newtcolorbox{definitionbox}{
+\newtcolorbox{definitionbox}[1]{
   colback=red!5!white,
   colframe=red!75!black,
   colbacktitle=red!85!black,
-  title=Definition:,
+  title=#1,
   fonttitle=\bfseries,
   enhanced,
 }
 
 % Definition of the tcolorbox for remarks
-\newtcolorbox{remarkbox}{
+\newtcolorbox{remarkbox}[1]{
   colback=blue!5!white,     % Light blue background
   colframe=blue!75!black,   % Darker blue frame
   colbacktitle=blue!85!black, % Even darker blue for the title background
-  title=Remark:,            % Title text for remark box
+  title=#1,            % Title text for remark box
   fonttitle=\bfseries,      % Bold title font
   enhanced,
 }
 
 % Definition of the tcolorbox for examples
-\newtcolorbox{examplebox}{
-  colback=green!5!white,
-  colframe=green!75!black,
-  colbacktitle=green!85!black,
-  title=Example:,
-  fonttitle=\bfseries,
+\newtcolorbox{examplebox}[1]{
+  colback=green!5!white,    % Light green background
+  colframe=green!75!black,   % Darker green frame
+  colbacktitle=green!85!black,  % Even darker green for the title background
+  title=#1,         % Title text for example box
+  fonttitle=\bfseries,    % Bold title font
   enhanced,
 }
 
@@ -158,28 +158,30 @@ In this report, an overview of the developping process of a python sudoku solver
 \section{Solving a Sudoku Puzzle}
 
 When solving a sudoku using brain-power, one has multiple technics they can use. Most simple is to go through each cell, and using the sudoku constraints, eliminate impossible values, and hopefully find that there exists only one possible value for the cell. Then, if the sudoku is easy enough, a large part of the cells can be filled in this way as finding the solution to one cell may ``unlock'' another and so on. This can be referred to as the candidate-checking method\cite{cornell_sudoku}.
-But there usually comes a point where that process is no longer sufficient. From there, a tedious but very useful option is to mark up the possible values of each cell, and then spend a varying amount of time finding impossibilities of some of those possible by picturing future scenarios, similar to chess. This is where the average human brain has difficulties, and where a computer performs very well.
+But there usually comes a point where that process is no longer sufficient. From there, a tedious but very useful option is to mark up the possible values of each cell, and then spend a varying amount of time finding impossibilities of some of those possible by picturing future scenarios, similar to chess\cite{cornell_sudoku}. This is where the average human brain has difficulties, and where a computer performs very well.
 
 \section{Backtracking Algorithm}
 
 A backtracking algorithm is the formal name of the process described above\cite{cornell_sudoku}.
 In its most naïve form, it can be described as follows:
 
-\begin{enumerate}
-  \item Go through each cell (in a chosen order).
-  \item In the current cell, enumerate from 1 to 9, until:
-  \subitem{a.} A value is found that is valid.
-  \subitem{b.} 9 is reached, and no valid value is found.
-  \item In case of 2.a., go to the next cell and start again from 2.
-  \item In case of 2.b., go back to the previous cell and try the next value.
 
-\end{enumerate}
+\begin{definitionbox}{Naïve Backtracking Algorithm for a 9$\times$9 Sudoku}
 
-The backtracking algorithm is a simple algorithm to understand and implement. It has the guarantee of finding a solution if one exists.
+  \begin{enumerate}
+    \item Go through each cell (in a chosen order).
+    \item In the current cell, enumerate from 1 to 9, until:
+    \subitem{a.} A value is found that is valid.
+    \subitem{b.} 9 is reached, and no valid value was found.
+    \item In case of 2.a., go to the next cell and start again from Step 2.
+    \item In case of 2.b., go back to the previous cell and, following from Step 2., try the next value.
+  \end{enumerate}
 
-It is a brute-force algorithm, it does not use any heuristics to find the solution faster. It simply iterates through all possible combinations of values, until it finds one that is valid based on the initial clues.
+\end{definitionbox}
 
-Because it is simple, it is also simple to make sure it is doing things correctly. It is easy to check that the algorithm is doing what it is supposed to do, and that it is doing it correctly. This is important for the validation of the code, which will be covered later.
+\vspace*{1\baselineskip}
+This algorithm has a few advantages. It is a rather simple algorithm to understand, for that reason it should also be relatively simple to implement in code. It offers the guarantee of finding a solution, if one exists, eventually. It can even solve an empty grid, though it will only find one solution out of the 6,670,903,752,021,072,936, 960 possible solutions\cite{cornell_sudoku3}. More on dealing with multiple solutions later.
+But being one of the simplest algorithms, there are also reasons why one would use another algorithm. It is a brute-force algorithm, it does not use any heuristics to find the solution faster. It simply iterates through all possible combinations of values, until it finds one that is valid based on the already filled cells. In general, its speed is dependent on the number of empty cells, and the number of possible values for each of those cells. Interestingly, because of it being so consistent in its method, one can develop a board that is specifically made to be ``difficult'' for this algorithm.
 
 However, it is naïve. In other words, this version does not really take into account the constraints of the sudoku. So it will go through all possible combinations of values, even if it is obvious that some of them are not valid. In terms of code, this would mean running a check on the validity of the cell trial value each time we try one. To avoid this, we can use the constraints of the sudoku to mark up each cell with the possible values, as one would on paper, and then only try out those values.
 
