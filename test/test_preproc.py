@@ -52,9 +52,14 @@ def test_load_sudoku():
     )
 
 
-def test_load_sudoku_2():
-    with unittest.TestCase().assertRaises(ValueError):
-        preprocessing.load_sudoku("sudokus/bad_format_sudoku.txt")
+class TestLoadFunction(unittest.TestCase):
+    def test_load_sudoku2(self):
+        # Test that a certain input triggers SystemExit with exit code 1
+        with self.assertRaises(SystemExit) as context:
+            preprocessing.load_sudoku("sudokus/bad_format_sudoku.txt")
+
+        # Check the exit code
+        self.assertEqual(context.exception.code, 1)
 
 
 sudoku = np.array(
@@ -80,6 +85,16 @@ def test_box():
                                                    [0, 5, 0]])
     )
     # fmt: on
+
+
+class TestBox(unittest.TestCase):
+    def test_box2(self):
+        # Test that a certain input triggers SystemExit with exit code 1
+        with self.assertRaises(SystemExit) as context:
+            preprocessing.box(sudoku, 1, 10)
+
+        # Check the exit code
+        self.assertEqual(context.exception.code, 1)
 
 
 def test_sudoku_to_output_format():

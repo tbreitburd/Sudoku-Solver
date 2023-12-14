@@ -11,6 +11,8 @@ format, for printing and saving the sudoku once solved.
 """
 import os
 import numpy as np
+import sys
+import traceback
 
 
 def load_sudoku(path):
@@ -38,42 +40,63 @@ def load_sudoku(path):
             "The sudoku file was not found at the path: " + sudoku_path
         )
 
-    sudoku_rows = f.readlines()
+    try:
+        sudoku_rows = f.readlines()
 
-    # Check that the sudoku file has the correct format:
-    # There should be 11 rows
-    if len(sudoku_rows) != 11:
-        raise ValueError(
-            "The sudoku in text form has an incorrect number "
-            + "of rows, should be 11 but is "
-            + str(len(sudoku_rows))
-        )
-    # 12 columns for the first 9 rows (9 + 2 separators + new line character)
-    len_rows = [len(char) for char in sudoku_rows]
-    if not all(x == 12 for x in len_rows[:10]):
-        raise ValueError(
-            "The sudoku in text form has an incorrect number "
-            + "of columns, should be 12 but is "
-            + str(len_rows[:10])
-        )
-    # horizontal separators should be "---+---+---\n"
-    if sudoku_rows[3] != "---+---+---\n" and sudoku_rows[7] != "---+---+---\n":
-        raise ValueError(
-            "The sudoku file has incorrect "
-            + "horizontal separators, must be ---+---+---"
-        )
+        # Check that the sudoku file has the correct format:
+        # There should be 11 rows
+        if len(sudoku_rows) != 11:
+            raise ValueError(
+                "The sudoku in text form has an incorrect number "
+                + "of rows, should be 11 but is "
+                + str(len(sudoku_rows))
+            )
+        # 12 columns for the first 9 rows
+        # (9 + 2 separators + new line character)
+        len_rows = [len(char) for char in sudoku_rows]
+        if not all(x == 12 for x in len_rows[:10]):
+            raise ValueError(
+                "The sudoku in text form has an incorrect number "
+                + "of columns, should be 12 but is "
+                + str(len_rows[:10])
+            )
+        # horizontal separators should be "---+---+---\n"
+        hor_sep = "---+---+---\n"
+        if sudoku_rows[3] != hor_sep and sudoku_rows[7] != hor_sep:
+            raise ValueError(
+                "The sudoku file has incorrect "
+                + "horizontal separators, must be ---+---+---"
+            )
+    except ValueError as e:
+        print("Traceback: ")
+        traceback.print_stack()
+        print("Error: ")
+        print(e)
+        print("Exiting program")
+        sys.exit(1)
 
     # Drop the horizontal separator lines
     sudoku_rows = sudoku_rows[0:3] + sudoku_rows[4:7] + sudoku_rows[8:11]
 
     # Check that the sudoku rows have the correct format,
     # with vertical separators at specific positions
-    InRowSep = [char[3] for char in sudoku_rows]
-    InRowSep2 = [char[7] for char in sudoku_rows]
-    if not all(x == "|" for x in InRowSep + InRowSep2):
-        raise ValueError(
-            "The sudoku file has incorrect vertical separators" + ", must be |"
-        )
+    # fmt: off
+    try:
+        InRowSep = [char[3] for char in sudoku_rows]
+        InRowSep2 = [char[7] for char in sudoku_rows]
+        if not all(x == "|" for x in InRowSep + InRowSep2):
+            raise ValueError(
+                "The sudoku file has incorrect vertical separators"
+                + ", must be |"
+            )
+    # fmt: on
+    except ValueError as e:
+        print("Traceback: ")
+        traceback.print_stack()
+        print("Error: ")
+        print(e)
+        print("Exiting program")
+        sys.exit(1)
 
     # Initialize the sudoku array
     sudoku = np.zeros((9, 9), dtype=int)
@@ -100,15 +123,23 @@ def box(sudoku, row, col):
     @return A 3x3 array of the corresponding box.
     """
     # Check that the cell coordinates are valid
-    if row < 0 or row > 8 or col < 0 or col > 8:
-        raise ValueError(
-            "The cell coordinates are not valid, "
-            + "must be between 0 and 8 inclusive but:"
-            + "Row: "
-            + str(row)
-            + ", Col: "
-            + str(col)
-        )
+    try:
+        if row < 0 or row > 8 or col < 0 or col > 8:
+            raise ValueError(
+                "The cell coordinates are not valid, "
+                + "must be between 0 and 8 inclusive but:"
+                + "Row: "
+                + str(row)
+                + ", Col: "
+                + str(col)
+            )
+    except ValueError as e:
+        print("Traceback: ")
+        traceback.print_stack()
+        print("Error: ")
+        print(e)
+        print("Exiting program")
+        sys.exit(1)
 
     # Initialize box array
     box = np.zeros((3, 3))
