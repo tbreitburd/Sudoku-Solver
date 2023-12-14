@@ -5,6 +5,8 @@ sudoku_solutions/
 /report/report.fdb_latexmk
 /report/report.fls
 /report/report.out
+/report/report.bbl
+/report/report.blg
 /docs/latex
 /test/__pycache__
 /src/__pycache__
