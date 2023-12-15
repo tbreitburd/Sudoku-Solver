@@ -381,7 +381,7 @@ As can be seen a large amount of time is lost with the list comprehension lines 
 
 It can be seen the cumulative times are much lower, and the time spent on the list comprehension lines is now either negligible or reduced by more than a factor of 10. This was all running for a near-empty sudoku that would make large use of the backtracking algorithm to solve:
 
-\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash]
 000|000|000
 001|000|200
 000|000|000
@@ -395,9 +395,9 @@ It can be seen the cumulative times are much lower, and the time spent on the li
 000|000|000
 \end{lstlisting}
 
-And the time it took to solve this sudoku before the set improvement was 0.049503 seconds, and 0.020695 seconds after the improvement. This was only timing the actual solving of the sudoku, not the import of modules or definition of the function, which we see are taking a large amount of time (as can be seen in the first line of each profiling output). Now the large amount of pandas functions using a non-negligible of time does bring the question of whether having the markup be updated many times might be an issue when the sudoku has a large enough amount of clues and a good part of it gets solved by the candidate checking method. In summary, maybe the candidate checking method is actually slowing down our solver. We test this now using an easy sudoku which can be solved entirely by the candidate checking method:
+And the time it took to solve this sudoku before the set improvement was 0.049503 seconds, and 0.020695 seconds after the improvement. This was only timing the line where we call the main \texttt{solve\_sudoku()} function, not running the entire file. Now the large amount of pandas functions using a non-negligible of time does bring the question of whether having the markup be updated many times might be an issue when the sudoku has a large enough amount of clues and a good part of it gets solved by the candidate checking method. In summary, maybe the candidate checking method is actually slowing down our solver. We test this now using an easy sudoku which can be solved entirely by the candidate checking method:
 
-\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash]
 002|560|470
 058|403|000
 004|020|008
@@ -410,6 +410,46 @@ And the time it took to solve this sudoku before the set improvement was 0.04950
 005|030|007
 060|709|200
 \end{lstlisting}
+
+
+We obtained the following profiling output:
+
+\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+          ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+          1    0.001    0.001    0.161    0.161 /src/solve_sudoku.py:26(solve_sudoku)
+         18    0.005    0.000    0.138    0.008 /src/solver_tools.py:56(markup)
+       1458    0.004    0.000    0.098    0.000 /pandas/core/series.py:1180(__setitem__)
+       1629    0.005    0.000    0.078    0.000 /pandas/core/series.py:1396(_maybe_update_cacher)
+       1458    0.004    0.000    0.063    0.000 /pandas/core/frame.py:4430(_maybe_cache_changed)
+       1620    0.003    0.000    0.031    0.000 /pandas/core/frame.py:3779(_ixs)
+       1458    0.013    0.000    0.026    0.000 /pandas/core/internals/managers.py:1045(iset)
+       2728    0.008    0.000    0.023    0.000 /pandas/core/frame.py:3856(__getitem__)
+       1620    0.002    0.000    0.017    0.000 /pandas/core/frame.py:4387(_box_col_values)
+         19    0.000    0.000    0.016    0.001 /pandas/core/frame.py:668(__init__)
+         19    0.001    0.000    0.015    0.001 /pandas/core/internals/construction.py:423(dict_to_mgr)
+26809/15959    0.005    0.000    0.009    0.000 {built-in method builtins.len}
+       1620    0.001    0.000    0.008    0.000 /pandas/core/frame.py:656(_constructor_sliced_from_mgr)
+       1458    0.001    0.000    0.008    0.000 /pandas/core/series.py:1270(_set_with_engine)
+       1620    0.005    0.000    0.007    0.000 /pandas/core/internals/managers.py:991(iget)
+       1458    0.002    0.000    0.007    0.000 /pandas/core/series.py:1385(_check_is_chained_assignment_possible)
+       1270    0.002    0.000    0.007    0.000 /pandas/core/series.py:1016(__getitem__)
+       2728    0.002    0.000    0.006    0.000 /pandas/core/frame.py:4405(_get_item_cache)  
+       1458    0.001    0.000    0.006    0.000 /pandas/core/internals/managers.py:1977(setitem_inplace)
+       1639    0.004    0.000    0.005    0.000 /pandas/core/generic.py:6147(__finalize__)
+       5456    0.004    0.000    0.005    0.000 /pandas/core/indexing.py:2678(check_dict_or_set_indexers)
+47346/47327    0.004    0.000    0.005    0.000 {built-in method builtins.isinstance}
+       4186    0.003    0.000    0.005    0.000 /pandas/core/indexes/range.py:394(__contains__)
+          3    0.002    0.001    0.005    0.002 /src/solver_tools.py:20(check_sudoku)
+       ....    .....    .....    .....    ..... mostly built-in functions of packages
+\end{lstlisting}
+
+Running the solver for this sudoku, it found a solution in 0.05651 seconds but did so much quicker in 0.00988 seconds when only getting the markup file once and not updating it. Unfortunately, our first assumption which was that conducting a candidate check to get rid of obvious values would be reducing the time spent using the backtracking method
+
+\subsection*{Future improvements}
+
+Apart from the obvious complete change of solving algorithm for better performance, there are a few future improvements that could be tested. 
+
+Possibly using a different library than pandas\cite{no_copy_dataframe}
 
 
 \chapter{Validation, Unit Tests and CI set up}
