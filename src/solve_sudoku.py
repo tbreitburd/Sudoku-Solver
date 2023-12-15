@@ -1,10 +1,13 @@
 """!@file solve_sudoku.py
-@brief This file contains the main sudoku solving code. .
+@brief Sudoku solver using backtracking algorithm.
 
-@details Using functions from modules ...,
-it takes in a sudoku in txt format (with specific formatting),
-solves it using ...,
-and returns the solved sudoku in the same format as the input.
+@details Using functions from modules preprocessing.py and solver_tools.py,
+it takes in a sudoku in txt format (with specific formatting) as input,
+and solves it using a backtracking algorithm, and optionaly a candidate 
+checking method. It then returns the solved sudoku in the same format 
+as the input, printing it to the console and writing it to a txt file, 
+in a directory called "sudoku_solutions".
+
 @author Created by T.Breitburd on 19/11/2023
 """
 
@@ -147,7 +150,7 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
 
 start = time.time()
 
-solve_sudoku(input_file, backtracking_type)
+solve_sudoku(input_file, backtracking_type, bactracking_only)
 
 end = time.time()
 

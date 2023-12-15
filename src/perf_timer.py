@@ -20,7 +20,9 @@ from . import solver_tools as st
 import numpy as np
 import pandas as pd
 import time
+import sys
 
+backtracking_only = sys.argv[1]
 
 def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     """!@brief Solve the sudoku.
@@ -128,7 +130,7 @@ for backtracking_type in ["forward", "backward", "ordered"]:
 
         # Solve the sudoku using the three types of backtracking, and time it
         start_time = time.time()
-        solution = solve_for_timing(sudoku, backtracking_type, False)
+        solution = solve_for_timing(sudoku, backtracking_type, backtracking_only)
         end_time = time.time()
 
         duration = end_time - start_time
