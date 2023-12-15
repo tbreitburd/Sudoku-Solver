@@ -325,7 +325,91 @@ Backtracking for solving a sudoku falls under the category of exhaustive search 
 Having a working solver, profiling was done to identify where time was lost on operations. By running \texttt{cProfile} on our main \texttt{solve\_sudoku.py} file, we got the following output:
 
 
+\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    1    0.000    0.000    0.083    0.083 /src/solve_sudoku.py:25(solve_sudoku 
+    3    0.001    0.000    0.051    0.017 /src/solver_tools.py:54(markup)
+  237    0.017    0.000    0.027    0.000 /src/solver_tools.py:94(<listcomp>)
+318/1    0.001    0.000    0.019    0.019 /src/solver_tools.py:120(backtrack_alg)
+  243    0.001    0.000    0.017    0.000 /pandas/core/series.py:1180(__setitem__) 
+  279    0.001    0.000    0.014    0.000 /pandas/core/series.py:1396(_maybe_update_cacher)
+  317    0.011    0.000    0.014    0.000 /src/solver_tools.py:159(<listcomp>)
+  243    0.001    0.000    0.011    0.000 /pandas/core/frame.py:4430(_maybe_cache_changed)
+ 3282    0.005    0.000    0.009    0.000 /src/preprocessing.py:89(box) 
+ 3287    0.002    0.000    0.006    0.000 /numpy/core/fromnumeric.py:1768(ravel)
+    3    0.002    0.001    0.006    0.002 /src/solver_tools.py:18(check_sudoku)
+  279    0.000    0.000    0.006    0.000 /pandas/core/frame.py:3779(_ixs)
+  643    0.002    0.000    0.006    0.000 /pandas/core/frame.py:3856(__getitem__)
+  243    0.003    0.000    0.005    0.000 /pandas/core/internals/managers.py:1045(iset)
+    6    0.000    0.000    0.005    0.001 /pandas/core/frame.py:668(__init__)
+    5    0.000    0.000    0.004    0.001 /pandas/core/internals/construction.py:423(dict_to_mgr)
+ 3287    0.004    0.000    0.004    0.000 {built-in method numpy.asanyarray}
+ 3282    0.003    0.000    0.003    0.000 /src/preprocessing.py:128(<listcomp>)
+  279    0.000    0.000    0.003    0.000 /pandas/core/frame.py:4387(_box_col_values)
+  400    0.001    0.000    0.002    0.000 /pandas/core/series.py:1016(__getitem__)
+  ....   .....    .....    .....    ..... mostly built-in functions of packages
+\end{lstlisting}
 
+As can be seen a large amount of time is lost with the list comprehension lines that are used in order to create the markups, get the valid values from the markup cell in the backtrack algorithm, and when getting the sudoku box, the cell is in. One fix for this is to use sets. Sets are very similar to lists but are unordered and only contain unique values\cite{freecodecamp_python_set_vs_list}. This means that originally, when list comprehension was used to get possible values, the code would check which value was not in a list which potentially contained duplicate, especially zeros which we did not drop. This meant python had to unnecessarily check elements in those lists. Whereas when using sets, the sets of the values in the row, column and box, could be unionized into a single set that would contain a maximum of 10 values, including the 0. The time it took for these value checking lines to be run could then be reduced significantly. The profiling output after this change was:
+
+\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.047    0.047 /src/solve_sudoku.py:26(solve_sudoku)
+        3    0.002    0.001    0.027    0.009 /src/solver_tools.py:56(markup)
+      243    0.001    0.000    0.017    0.000 /pandas/core/series.py:1180(__setitem__)
+      279    0.001    0.000    0.014    0.000 /pandas/core/series.py:1396(_maybe_update_cacher)
+      243    0.001    0.000    0.011    0.000 /pandas/core/frame.py:4430(_maybe_cache_changed)
+    318/1    0.003    0.000    0.010    0.010 /src/solver_tools.py:147(backtrack_alg)
+      279    0.000    0.000    0.005    0.000 /pandas/core/frame.py:3779(_ixs)
+      643    0.002    0.000    0.005    0.000 /pandas/core/frame.py:3856(__getitem__)
+        3    0.002    0.001    0.005    0.002 /src/solver_tools.py:20(check_sudoku)
+        6    0.000    0.000    0.005    0.001 /pandas/core/frame.py:668(__init__)
+      243    0.003    0.000    0.005    0.000 /pandas/core/internals/managers.py:1045(iset)
+        5    0.000    0.000    0.005    0.001 /pandas/core/internals/construction.py:423(dict_to_mgr)
+      279    0.000    0.000    0.003    0.000 /pandas/core/frame.py:4387(_box_col_values)
+      400    0.001    0.000    0.002    0.000 /pandas/core/series.py:1016(__getitem__)
+     1283    0.002    0.000    0.002    0.000 /src/preprocessing.py:112(box)
+     1288    0.001    0.000    0.002    0.000 /numpy/core/fromnumeric.py:1768(ravel)
+      317    0.002    0.000    0.002    0.000 /src/solver_tools.py:191(<listcomp>)
+5206/3341    0.001    0.000    0.002    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.001    0.001 /pandas/core/frame.py:10039(map)
+        1    0.000    0.000    0.001    0.001 /pandas/core/frame.py:9867(apply)
+      243    0.000    0.000    0.001    0.000 /pandas/core/series.py:1270(_set_with_engine)
+    ....     .....    .....    .....    ..... mostly built-in functions of packages
+
+\end{lstlisting}
+
+It can be seen the cumulative times are much lower, and the time spent on the list comprehension lines is now either negligible or reduced by more than a factor of 10. This was all running for a near-empty sudoku that would make large use of the backtracking algorithm to solve:
+
+\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+000|000|000
+001|000|200
+000|000|000
+---+---+---
+000|000|000
+000|000|000
+000|000|000
+---+---+---
+000|000|000
+000|000|000
+000|000|000
+\end{lstlisting}
+
+And the time it took to solve this sudoku before the set improvement was 0.049503 seconds, and 0.020695 seconds after the improvement. This was only timing the actual solving of the sudoku, not the import of modules or definition of the function, which we see are taking a large amount of time (as can be seen in the first line of each profiling output). Now the large amount of pandas functions using a non-negligible of time does bring the question of whether having the markup be updated many times might be an issue when the sudoku has a large enough amount of clues and a good part of it gets solved by the candidate checking method. In summary, maybe the candidate checking method is actually slowing down our solver. We test this now using an easy sudoku which can be solved entirely by the candidate checking method:
+
+\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+002|560|470
+058|403|000
+004|020|008
+---+---+---
+781|000|040
+409|100|726
+006|047|800
+---+---+---
+007|006|013
+005|030|007
+060|709|200
+\end{lstlisting}
 
 
 \chapter{Validation, Unit Tests and CI set up}

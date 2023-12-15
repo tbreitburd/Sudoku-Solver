@@ -15,12 +15,17 @@ from . import preprocessing as preproc
 from . import solver_tools as st
 import time
 import os
+import cProfile
+import pstats
+import io
+
 
 input_file = sys.argv[1]
 backtracking_type = sys.argv[2]
+bactracking_only = sys.argv[3]
 
 
-def solve_sudoku(input_file, backtracking_type):
+def solve_sudoku(input_file, backtracking_type, bactracking_only):
     input_path = input_file
     # Load the sudoku from its txt file to a 9x9 numpy array
     sudoku = preproc.load_sudoku(input_path)
@@ -34,24 +39,35 @@ def solve_sudoku(input_file, backtracking_type):
         # fmt: on
 
     # Create a markup dataframe of possible values for the sudoku
-    # and initialise a second markup dataframe, to compare the updated markup
-    # with the first one.
-    markup_0 = st.markup(sudoku)
-    markup_1 = pd.DataFrame(index=range(9), columns=range(9))
+    # if Bactracking_only: initialise a second markup dataframe, 
+    # to compare the updated markup with the first one.
 
-    # We want to put any unique possible value that the markup
-    # finds in the sudoku.
-    # And update the markup following that change,
-    # until the markup doesn't change.
-    while not np.array_equal(markup_0.values, markup_1.values):
+    if bactracking_only:
+        # We want to put any unique possible value that the markup
+        # finds in the sudoku.
+        markup_1 = st.markup(sudoku)
+        for row in range(9):
+                for col in range(9):
+                    if len(markup_1[col][row]) == 1:
+                        sudoku[row][col] = markup_1[col][row][0]
+    
+    else:
         markup_0 = st.markup(sudoku)
+        markup_1 = pd.DataFrame(index=range(9), columns=range(9))
+
+        # We want to put any unique possible value that the markup
+        # finds in the sudoku.
+        # And update the markup following that change,
+        # until the markup doesn't change.
+        while not np.array_equal(markup_0.values, markup_1.values):
+            markup_0 = st.markup(sudoku)
         for row in range(9):
             for col in range(9):
-                if len(markup_0[col][row]) == 1:
-                    sudoku[row][col] = markup_0[col][row][0]
-        if all(x != 0 for x in np.ravel(sudoku[:][:])):
-            break
-        markup_1 = st.markup(sudoku)
+                if len(markup_1[col][row]) == 1:
+                    sudoku[row][col] = markup_1[col][row][0]
+            if all(x != 0 for x in np.ravel(sudoku[:][:])):
+                break
+            markup_1 = st.markup(sudoku)
 
     # Check if the sudoku is valid after the marking up
     valid, message = st.check_sudoku(sudoku)
@@ -104,8 +120,8 @@ def solve_sudoku(input_file, backtracking_type):
             print(solved_sudoku_str)
         else:
             print("The backtracking algorithm failed to solve the sudoku. " +
-                  "Please try a different backtracking type. " +
-                  "if the issue persists, the sudoku may be unsolvable.")
+                    "Please try a different backtracking type. " +
+                    "if the issue persists, the sudoku may be unsolvable.")
 
     # Check if the sudoku is valid after the backtracking
     valid, message = st.check_sudoku(sudoku)
@@ -126,6 +142,8 @@ def solve_sudoku(input_file, backtracking_type):
     with open(output_path, "w") as file:
         file.write(solved_sudoku_str)
 
+#pr = cProfile.Profile()
+#pr.enable()
 
 start = time.time()
 
@@ -134,3 +152,13 @@ solve_sudoku(input_file, backtracking_type)
 end = time.time()
 
 print(f"Elapsed time: {end - start} seconds")
+
+#pr.disable()
+#s = io.StringIO()
+#sortby = "cumulative"
+#ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+#ps.print_stats()
+#print(s.getvalue())
+
+#with open("profile.txt", "w+") as file:
+#    file.write(s.getvalue())

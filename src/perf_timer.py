@@ -22,7 +22,7 @@ import pandas as pd
 import time
 
 
-def solve_for_timing(sudoku, backtracking_type):
+def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     """!@brief Solve the sudoku.
 
     @details This function takes in a sudoku,
@@ -38,22 +38,29 @@ def solve_for_timing(sudoku, backtracking_type):
     # Create a markup dataframe of possible values for the sudoku
     # and initialise a second markup dataframe, to compare the updated markup
     # with the first one.
-    markup_0 = st.markup(sudoku)
-    markup_1 = pd.DataFrame(index=range(9), columns=range(9))
-
-    # We want to put any unique possible value that the markup
-    # finds in the sudoku.
-    # And update the markup following that change,
-    # until the markup doesn't change.
-    while not np.array_equal(markup_0.values, markup_1.values):
-        markup_0 = st.markup(sudoku)
-        for row in range(9):
-            for col in range(9):
-                if len(markup_0[col][row]) == 1:
-                    sudoku[row][col] = markup_0[col][row][0]
-        if all(x != 0 for x in np.ravel(sudoku[:][:])):
-            break
+    if bactrack_only:
         markup_1 = st.markup(sudoku)
+        for row in range(9):
+                for col in range(9):
+                    if len(markup_1[col][row]) == 1:
+                        sudoku[row][col] = markup_1[col][row][0]
+    else:
+        markup_0 = st.markup(sudoku)
+        markup_1 = pd.DataFrame(index=range(9), columns=range(9))
+
+        # We want to put any unique possible value that the markup
+        # finds in the sudoku.
+        # And update the markup following that change,
+        # until the markup doesn't change.
+        while not np.array_equal(markup_0.values, markup_1.values):
+            markup_0 = st.markup(sudoku)
+            for row in range(9):
+                for col in range(9):
+                    if len(markup_0[col][row]) == 1:
+                        sudoku[row][col] = markup_0[col][row][0]
+            if all(x != 0 for x in np.ravel(sudoku[:][:])):
+                break
+            markup_1 = st.markup(sudoku)
 
     # Check if the sudoku is valid after the marking up
     valid, message = st.check_sudoku(sudoku)
@@ -121,7 +128,7 @@ for backtracking_type in ["forward", "backward", "ordered"]:
 
         # Solve the sudoku using the three types of backtracking, and time it
         start_time = time.time()
-        solution = solve_for_timing(sudoku, backtracking_type)
+        solution = solve_for_timing(sudoku, backtracking_type, False)
         end_time = time.time()
 
         duration = end_time - start_time
