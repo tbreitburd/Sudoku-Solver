@@ -34,7 +34,7 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
     sudoku = preproc.load_sudoku(input_path)
 
     # Check if the sudoku is valid
-    valid, message = st.check_sudoku(sudoku)
+    valid, message = st.check_sudoku(sudoku, False)
     if not valid:
         # fmt: off
         raise RuntimeError("The sudoku is not valid at loading time: "
@@ -73,7 +73,7 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
             markup_1 = st.markup(sudoku)
 
     # Check if the sudoku is valid after the marking up
-    valid, message = st.check_sudoku(sudoku)
+    valid, message = st.check_sudoku(sudoku, False)
     if not valid:
         # fmt: off
         raise RuntimeError("The sudoku is no longer valid after markup: "
@@ -127,10 +127,11 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
                     "if the issue persists, the sudoku may be unsolvable.")
 
     # Check if the sudoku is valid after the backtracking
-    valid, message = st.check_sudoku(sudoku)
+    valid, message = st.check_sudoku(sudoku, True)
     if not valid:
         raise RuntimeError(
-            "The sudoku is no longer valid after backtracking: " + message
+            "The sudoku is no longer valid or not yet solved" +
+            " after backtracking: " + message
         )
 
     # Finally, write the solved sudoku to the output file

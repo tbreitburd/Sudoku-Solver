@@ -17,7 +17,7 @@ import sys
 import traceback
 
 
-def check_sudoku(sudoku):
+def check_sudoku(sudoku, final_check):
     """!@brief Check if the sudoku is valid.
 
     @details This function takes in a sudoku,
@@ -25,10 +25,16 @@ def check_sudoku(sudoku):
     in each row, column and box.
 
     @param sudoku A 9x9 numpy array containing the sudoku numbers
+    @param final_check A boolean, True if it's to check the sudoku is solved
 
     @return A boolean, True if the sudoku is valid, False if it is not.
     And a string, containing a message explaining why the sudoku is not valid.
     """
+    # Check if the sudoku is filled completely:
+    if final_check:
+        if not all(x != 0 for x in np.ravel(sudoku[:][:])):
+            message = "The sudoku is not solved, there are still empty cells"
+            return False, message
 
     # Check if there are too many of the same number in a row, column or box
     # fmt: off
