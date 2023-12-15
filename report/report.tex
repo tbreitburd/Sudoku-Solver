@@ -233,18 +233,18 @@ The solver would be runnable from the command line like so:
 Where the \texttt{parameter.ini} file contains groups of parameters, mainly the input file paths. Which parameters to use would be specified in the main \texttt{solve\_sudoku.py} file. Bearing in mind that the sudokus must be in a \texttt{.txt} file, with the following format, with 0's representing empty cells:
 
 \vspace*{1\baselineskip}
-\begin{lstlisting}[language=bash]
-  020|000|000
-  000|083|400
-  090|000|000
-  ---+---+---
-  000|800|000
-  600|009|000
-  000|000|093
-  ---+---+---
-  000|100|000
-  000|054|000
-  070|000|000
+\begin{lstlisting}[caption = {Sudoku input format example}]
+020|000|000
+000|083|400
+090|000|000
+---+---+---
+000|800|000
+600|009|000
+000|000|093
+---+---+---
+000|100|000
+000|054|000
+070|000|000
 \end{lstlisting}
 
 \vspace*{1\baselineskip}
@@ -274,7 +274,7 @@ To implement the candidate checking method, the markup function simply implement
 
 Now comes the main part of the solver, the backtracking algorithm. The first attempt consisted of having an embedded \texttt{while} and \texttt{for} loop in which the \texttt{tryout()} function would be used. However, it quickly became obvious this would either need a very convoluted series of loops or simply not be possible. The main issue was how one would be able to go back to the previous iteration of the loop. More precisely, while there is a \texttt{continue} statement to skip to the next iteration, there isn't one to go back one\cite{stackoverflow_python_for_loop}. And though this cited stackoverflow post did provide an approach to have an iterator that could reverse one step, an other issue was the ability to keep track of the values already tried in the previous cell\cite{stackoverflow_python_for_loop}. This would maybe mean having a list to which tried values get added, but this method could lead to code that was hard to follow. Thus, the method settled upon was to use a recursive function structure. The point of a recursive function is that it calls itself within its definition:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}[language=Python, caption = {Recursive function structure}]
   def recursive_function(args_1):
     if base_case:
       return something
@@ -293,7 +293,7 @@ Backtracking for solving a sudoku falls under the category of exhaustive search 
     \begin{enumerate}
       \item \textbf{If} there are no more decisions to make:
       \subitem{a.}\textbf{Base case} If the sudoku is solved, i.e.\ we've reached the end of the sudoku still-empty cells, end the recursion. Return True.
-      \subitem{b.} \textbf{Base case} If the sudoku is not solved, i.e.\ we've gone through every possibility, but there are no more possible values for the last cell, end the recursion. Return False.
+      \subitem{b.}\textbf{Exhausted} If the sudoku is not solved, i.e.\ we've gone through every possibility, but there are no more possible values for the last cell, end the recursion. Return False.
       \item \textbf{Else:}
       \subitem{a.} \textbf{Choosing} Iterating over the still empty cells of the sudoku (markup cells with more than one possible value) using a recursive function. Choose a value from the markup cell's list, to which was applied the candidate checking method, to remove values that were no longer valid due to the filling up of the sudoku.
       \subitem{b.} \textbf{Exploring} Input that value in the sudoku, tracking our choice and move to the next cell, starting again at step 1.
@@ -304,28 +304,32 @@ Backtracking for solving a sudoku falls under the category of exhaustive search 
 \end{examplebox}
 
 
+One issue with backtracking as mentionned earlier is that the time it takes is sort of a gamble. It depends on the number of empty cells, and the number of possible values for each of those cells, but the placing of the non empty cells can dramatically increase the number of trials the backtracking has to go through. In most cases, the algorithm only tries a tiny fraction of the possible combinations. An anti-backtracking sudoku can easily be created\cite{stackoverflow_optimizing_backtracking_sudoku}. The following sudoku is one such example, taking 17843.329 seconds to solve:
 
+\begin{lstlisting}[caption={anti\_backtracking.txt sudoku}]
+900|800|000
+000|000|500
+000|000|000
+---+---+---
+020|010|003
+010|000|060
+000|400|070
+---+---+---
+708|600|000
+000|030|100
+400|000|200
+\end{lstlisting}
+
+But this is purely dependent on the order in which the algorithm iterates through the sudoku. Indeed, setting up a reverse order backtracking algorithm, this sudoku takes only 1.5 seconds to solve. This lead to also try an ordered backtracking algorithm, filling the cells with the least number of possible values first\cite{stackoverflow_optimizing_backtracking_sudoku}. TO assess performance, a \texttt{perf\_timer.py} file was created, which used a large number of sudokus, and timed how long it took to solve them. Interestingly, all 3 types of backtracking performed equally well. 
+ 
 \section{Profiling}
 
-%https://stackoverflow.com/questions/1518346/optimizing-the-backtracking-algorithm-solving-sudoku for the choice to test other orders of backtracking, and for future improvements
 
-%972|853|614
-%146|279|538
-%583|146|729
-%---+---+---
-%624|718|953
-%817|395|462
-%359|462|871
-%---+---+---
-%798|621|345
-%265|934|187
-%431|587|296
-%Elapsed time: 17843.329435825348 seconds
 
 Having a working solver, profiling was done to identify where time was lost on operations. By running \texttt{cProfile} on our main \texttt{solve\_sudoku.py} file, we got the following output:
 
 
-\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash,caption={First profiling output}, basicstyle=\tiny]
 ncalls  tottime  percall  cumtime  percall filename:lineno(function)
     1    0.000    0.000    0.083    0.083 /src/solve_sudoku.py:25(solve_sudoku 
     3    0.001    0.000    0.051    0.017 /src/solver_tools.py:54(markup)
@@ -352,7 +356,7 @@ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
 
 As can be seen a large amount of time is lost with the list comprehension lines that are used in order to create the markups, get the valid values from the markup cell in the backtrack algorithm, and when getting the sudoku box, the cell is in. One fix for this is to use sets. Sets are very similar to lists but are unordered and only contain unique values\cite{freecodecamp_python_set_vs_list}. This means that originally, when list comprehension was used to get possible values, the code would check which value was not in a list which potentially contained duplicate, especially zeros which we did not drop. This meant python had to unnecessarily check elements in those lists. Whereas when using sets, the sets of the values in the row, column and box, could be unionized into a single set that would contain a maximum of 10 values, including the 0. The time it took for these value checking lines to be run could then be reduced significantly. The profiling output after this change was:
 
-\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash, caption={Profiling output after list comprehension improvements}, basicstyle=\tiny]
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
         1    0.000    0.000    0.047    0.047 /src/solve_sudoku.py:26(solve_sudoku)
         3    0.002    0.001    0.027    0.009 /src/solver_tools.py:56(markup)
@@ -381,7 +385,7 @@ As can be seen a large amount of time is lost with the list comprehension lines 
 
 It can be seen the cumulative times are much lower, and the time spent on the list comprehension lines is now either negligible or reduced by more than a factor of 10. This was all running for a near-empty sudoku that would make large use of the backtracking algorithm to solve:
 
-\begin{lstlisting}[language=Bash]
+\begin{lstlisting}[caption = {sudoku\_near\_empty.txt}]
 000|000|000
 001|000|200
 000|000|000
@@ -397,7 +401,7 @@ It can be seen the cumulative times are much lower, and the time spent on the li
 
 And the time it took to solve this sudoku before the set improvement was 0.049503 seconds, and 0.020695 seconds after the improvement. This was only timing the line where we call the main \texttt{solve\_sudoku()} function, not running the entire file. Now the large amount of pandas functions using a non-negligible of time does bring the question of whether having the markup be updated many times might be an issue when the sudoku has a large enough amount of clues and a good part of it gets solved by the candidate checking method. In summary, maybe the candidate checking method is actually slowing down our solver. We test this now using an easy sudoku which can be solved entirely by the candidate checking method:
 
-\begin{lstlisting}[language=Bash]
+\begin{lstlisting}[caption= {sudoku\_easy.txt}]
 002|560|470
 058|403|000
 004|020|008
@@ -414,7 +418,7 @@ And the time it took to solve this sudoku before the set improvement was 0.04950
 
 We obtained the following profiling output:
 
-\begin{lstlisting}[language=Bash, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash, caption={Profiling output for easy sudoku},basicstyle=\tiny]
           ncalls  tottime  percall  cumtime  percall filename:lineno(function)
           1    0.001    0.001    0.161    0.161 /src/solve_sudoku.py:26(solve_sudoku)
          18    0.005    0.000    0.138    0.008 /src/solver_tools.py:56(markup)
@@ -443,9 +447,9 @@ We obtained the following profiling output:
        ....    .....    .....    .....    ..... mostly built-in functions of packages
 \end{lstlisting}
 
-Running the solver for this sudoku, it found a solution in 0.05651 seconds but did so much quicker in 0.00988 seconds when only getting the markup file once and not updating it. Unfortunately, our first assumption which was that conducting a candidate check to get rid of obvious values would be reducing the time spent using the backtracking method
+Running the solver for this sudoku, it found a solution in 0.05651 seconds but did so much quicker in 0.00988 seconds when only getting the markup file once and not updating it. Unfortunately, our first assumption which was that conducting a candidate check to get rid of obvious values would be reducing the time spent using the backtracking method may be false. Using the \texttt{perf\_timer.py} file described in the section 2.1., a comparison was made between average runtime for many sudokus, with and without the candidate checking method. The results showed almost a factor of 3 decrease in runtime when using backtracking only and marking up the sudoku just once (Backtracking only: 0.0054 compared to 0.0167 seconds).
 
-\subsection*{Future improvements}
+\subsection{Future improvements}
 
 Apart from the obvious complete change of solving algorithm for better performance, there are a few future improvements that could be tested. 
 
@@ -454,22 +458,111 @@ Possibly using a different library than pandas\cite{no_copy_dataframe}
 
 \chapter{Validation, Unit Tests and CI set up}
 
-\section{Validation}
+\section{Validation and Unit Tests}
 
-A check\_sudoku function was written to check that the sudoku is valid. It checks that each row, column and box, and that there are no duplicates.
-
-\section{Unit Tests}
+Most sudokus in the offered \texttt{sudokus/} directory were either obtained from the sudoku app from sudoku.com\cite{sudoku_com} by EasyBrain. Thus, the solutions given by the solver were checked using these. More importantly, especially the case of multiple soltiple solutions, a \texttt{check\_sudoku()} function was written to check that the sudoku is valid. This means checking there are no duplicated values in the rows, columns and boxes. It is used at different points in the solver, checking the sudoku is valid after loading, after candidate checking, and after backtracking. It is also useful for running the \texttt{perf\_timer.py} file, as the solved sudokus are not returned so it is worth checking that the solver did indeed find a valid solution. It takes an argument \texttt{final\_check} which, if set to False, will mean the check does not care about 0 values, as they are expected in the sudoku when it is not yet solved.  
+Multiple error traps were set in the functions and main code. They include checks to ensure the format of the input sudoku is correct, and multiple checks to ensure the sudoku is valid at different points in the solver, and that it is not unsolvable. If any of these checks fail, the solver will stop and print an appropriate error message, with a traceback to the line where the error occured.  
+Unit tests were also set up. They are all very straightforward, and they check the functions return the expected output for a given input. Either they check that for a given correct input, the output is the correct one. Or, for a given ``bad'' input, they check that the error traps function as expected and that an error is indeed raised. This was done using the \texttt{unittest} package. 
 
 \section{CI set up}
+
+Continuous Integration of this project was set up using a \texttt{pre-commit-config.yaml} file. This enables to have a few automated processes that run checks on the code before every commit:
+
+\begin{enumerate}
+  \item \textbf{\texttt{check-yaml}} Checks that the \texttt{.yaml} files were not changed. This includes the \texttt{pre-commit-config.yaml} file itself.
+  \item \textbf{\texttt{end-of-file-fixer}}, \textbf{\texttt{trailing-whitespace}}, \textbf{\texttt{mixed-line-ending}} Checks the end of the files are correct. This is to ensure that the files end with a new line, and that the line endings are consistent.
+  \item \textbf{\texttt{debug-statements}} Checks that there are no debugging statements left in the code. This is to ensure that the code is clean and ready to be run.
+  \item \textbf{\texttt{black}} Checks the format of the code, and reformats it if necessary. It is there to minimize the number of errors the next hook could find.
+  \item \textbf{\texttt{flake8}} Checks the code for PEP8 compliance. It is there to ensure the code is clean and readable, following a set of standards. E.g. line length cannot exceed 79 characters (due to most code editors having set window widths\cite{pep8_}).
+  \item \textbf{\texttt{pytest}} Runs all the files that fall under a certain naming convention (Here: \texttt{\^test//test\_.\*\.py}, i.e.\ all files in the \texttt{test/} directory that start with \texttt{test\_} and end with \texttt{.py}, to avoid an error with pytest catchin the \texttt{\_\_pycache\_\_} files in the \texttt{test/} directory). 
+\end{enumerate}
+
+The code was also written with Doxygen compatible documentation, and accordingly, there was a \texttt{Doxyfile} created to generate the documentation. There should be a \texttt{Doxyfile} in the \texttt{docs/} directory, but Doxygen can be run to get it if it is missing. 
+
 
 \chapter{Packaging and Usability}
 
 \section{Packaging}
 
+The structure of the project is as follows:
+
+
+\begin{lstlisting}[caption={Directory Structure},basicstyle=\tiny]
+  
+  sudoku_solver/
+  |-- docs/
+  |   |-- Doxyfile
+  |    -- html/
+  |-- report/
+  |   |-- refs.bib
+  |   |-- report.pdf
+  |    -- report.tex
+  |-- src/
+  |   |-- __init__.py
+  |   |-- preprocessing.py
+  |   |-- solver_tools.py
+  |    -- solve_sudoku.py
+  |-- profiling/
+  |   |-- perf_timer.py
+  |   |-- profiling.py
+  |    -- profile.txt
+  |-- test/
+  |   |-- __init__.py
+  |   |-- test_preproc.py
+  |   |-- test_markup.py
+  |   |-- test_backtrack.py
+  |    -- test_check_sudoku.py
+  |-- sudokus/
+  |   |-- anti_backtracking.txt
+  |   |-- bad_format_sudoku.txt
+  |   |-- dad_sudoku.txt
+  |   |-- sudoku_easy.txt
+  |   |-- sudoku_near_empty.txt
+  |   |-- sudoku_test.txt
+  |   |-- sudoku1.txt
+  |    -- sudoku2.txt
+  |-- .gitignore
+  |-- .pre-commit-config.yaml
+  |-- environment.yml
+  |-- Dockerfile
+  |-- LICENSE
+   -- README.md
+
+\end{lstlisting}
+
 \section{Usability}
+
+The repository comes with a Dockerfile which the user is encouraged to use. One can build an image from it, using:
+
+\begin{lstlisting}[language=bash, caption={How to build the Docker image}]
+  docker build -t C1_Coursework .
+\end{lstlisting}
+
+Once the image built, the container can be run using:
+
+\begin{lstlisting}[language=bash, caption={How to run the Docker container}]
+  docker run --rm -ti C1_Coursework
+\end{lstlisting}
+
+Then, running the following line will open a bash shell in the container:
+
+\begin{lstlisting}[language=bash, caption={How to open a bash shell in the container}]
+  docker exec -ti conda bash
+\end{lstlisting}
+
+The main solver file is \texttt{solve\_sudoku.py} can then be run from the command line using the following command:
+
+\begin{lstlisting}[language=bash, caption={How to run the solver}]
+  python -m src.solve_sudoku path/to/sudoku.txt 'backtracking_type' backtracking_only
+\end{lstlisting}
+
+The \texttt{-m} flag is used to run the file as a module, which is to deal with the relative imports in the code. The \texttt{path/to/sudoku.txt} is the path to the sudoku file, in the format specified in Listing 2.1. The \texttt{backtracking\_type} argument can either be \texttt{'forward'}, \texttt{'backward'}, or \texttt{'ordered'}. The \texttt{backtracking\_only} argument is a \texttt{Bool} value, and is used to set the solver to only use backtracking (\texttt{True}) or also use the candidate checking method (\texttt{False}). The solver will print the solved sudoku to the command line, and also write a \texttt{.txt} file with the same name as the input sudoku file, in a \texttt{sudoku\_solution/} directory, which will get created if it doesn't exist yet.
+
 
 
 \chapter{Summary}
+
+Thus, our sudoku solver now works as intended. It can solve any sudoku, though give only one solution to sudokus with multiple solutions. 
 
 \bibliographystyle{plain}
 \bibliography{refs.bib}
