@@ -186,6 +186,7 @@ So rather than wait until it is iterating through the cells, the algorithm could
 
 \section{Modified Backtracking Algorithm}
 
+
 Bringing back our attention to the candidate checking method, we know that we can identify ``obvious'' values for cells, and fill them in. Noting that to do so, we have to mark up the possible values for each cell. We can therefore use a modified backtracking algorithm that uses the candidate checking method prior to backtracking, to reduce the overall complexity of the algorithm (Maximum $\mathcal{O}(N_{v}^{N_{empty cells}})$, where $N_{v}$ is the number of possible value for each cell, and $N_{v}\leq 9$).
 
 \begin{definitionbox}{Modified Backtracking Algorithm with candidate checking for a 9$\times$9 Sudoku}
@@ -206,6 +207,7 @@ Bringing back our attention to the candidate checking method, we know that we ca
 
 \newpage
 \section{Prototyping}
+
 
 The first idea of what the solver's code would look like was something like this:
 
@@ -259,15 +261,49 @@ From there the solved sudoku would outputed by printing it to the command line.
 
 \subsection{Markup and Box functions}
 
+
 The \texttt{box()} function was written first to simply split the sudoku into its 9 boxes and return all of them. This would mean unnecessary memory use, so the function was changed to take in the row and column number of the box we wanted (e.g.\ the top right box would be box(1,3)), and return just that one. However, that meant figuring out which box the cell was in, from its coordinates, before calling the \texttt{box} function. Because that would be somewhat messy since the \texttt{box()} function would be called in multiple places, it was then changed to simply take in the cell coordinates and return the box the cell is in.
 In its first version, the \texttt{markup()} function would go through each unfilled cell and get the possible values for that cell, putting these in the markup dataframe, at the same coordinates. One problem, which came up when moving on to the candidate checking part of the solver, was that the markup dataframe contained NaN values, for the cells that were already filled. This would cause issues when comparing the markup dataframes when checking if the markup had changed. So, though it was not the most elegant fix, the \texttt{markup()} function was changed to fill in the already filled cells' locations in the markup with those values. In the context of the candidate checking loop, this meant that when updating the sudoku, the values of the cells that were already filled would be overwritten with the same values.
 
 \subsection{Candidate Checking}
-To implement the candidate checking method, the markup function simply implemented in a loop whose condition was that the markup DataFrame no longer changed. Now it was entirely possible that candidate checking was a sufficient method to solve the easier sudokus, in which case an already solved sudoku would be given to the backtracking algorithm. So a break condition was added to the code, to return the solved sudoku if the sudoku no longer had empty ($=0$) cells.
+
+
+To implement the candidate checking method, the markup function simply implemented in a loop whose condition was planned to be that there no longer were any unique possible values in the markup. But with the \texttt{markup()} function changes described above, it was changed to there being no difference between the updated markup and the previous one. Now it was entirely possible that candidate checking was a sufficient method to solve the easier sudokus, in which case an already solved sudoku would be given to the backtracking algorithm. So a break condition was added to the code, to return the solved sudoku if the sudoku no longer had empty ($=0$) cells. Further along the development process, once the solver was working as intended, the \texttt{markup()} function was changed to allow for empty sudokus, giving a warning that there may be multiple solutions when the number of clues at the start of the sudoku is less than 17\cite{cornell_sudoku2}.
 
 \subsection{Backtracking}
 
-Another crack in the backtracking algorithm is for sudoku's that have multiple solutions. In that case, the solution it finds is simply a matter of what order the backtracking algorithm tries the values in. This means it will only find one solution, and only that one everytime. Making the assumption that the user may be simply interested in just solving the sudoku puzzle they have, a warning was added to the solver, to let the user know that the sudoku may have multiple solutions, and just one of them will be given.
+Now comes the main part of the solver, the backtracking algorithm. The first attempt consisted of having an embedded \texttt{while} and \texttt{for} loop in which the \texttt{tryout()} function would be used. However, it quickly became obvious this would either need a very convoluted series of loops or simply not be possible. The main issue was how one would be able to go back to the previous iteration of the loop. More precisely, while there is a \texttt{continue} statement to skip to the next iteration, there isn't one to go back one\cite{stackoverflow_python_for_loop}. And though this cited stackoverflow post did provide an approach to have an iterator that could reverse one step, an other issue was the ability to keep track of the values already tried in the previous cell\cite{stackoverflow_python_for_loop}. This would maybe mean having a list to which tried values get added, but this method could lead to code that was hard to follow. Thus, the method settled upon was to use a recursive function structure. The point of a recursive function is that it calls itself within its definition:
+
+\begin{lstlisting}[language=Python]
+  def recursive_function(args_1):
+    if base_case:
+      return something
+    else:
+      # do something
+      recursive_function(args_2)
+    # do something
+    return something else
+\end{lstlisting}
+
+In doing so, the function is called multiple times until a base case condition is fulfilled, a maximum number of recursive depth is reached\cite{stackoverflow_recursion_depth}, or something else depending on what the context and goal of the function is, which stops the recursion. The main benefit, apart from tidiness is that everything outside the function call is kept track of, as expected for the first call but that also means at different recursion levels. For example, the recursive function above could be trying out values for the sudoku. Let's say the first value was tried for \texttt{recursive\_function(args\_1)}, where \texttt{args\_1} would be the first cell, the function would then move on to the line where it calls \texttt{recursive\_function(args\_2)}. Now let's say \texttt{recursive\_function(args\_2)} has tried every possible option it had to try, which could mean having gone down multiple recursive levels, one would exit all recursive levels up to \text{recursive\_function(args\_1)} and be brought back to excatly where they were. The next value for the first cell could be tried and so on. Concisely, the recursive levels are akin to embedded for loops, but without the worry of having to set the number of loops.
+Backtracking for solving a sudoku falls under the category of exhaustive search where one tries all possible combinations. Following the Stanford lecture on Exhaustive search and backtracking[slides 13\-17]\cite{stanford_lecture}, this approach can be combined with returning booleans to handle whether to continue the recursion or end it. This gives the following structure:
+
+\begin{examplebox}{Backtracking applied to sudoku}
+
+    \begin{enumerate}
+      \item \textbf{If} there are no more decisions to make:
+      \subitem{a.}\textbf{Base case} If the sudoku is solved, i.e.\ we've reached the end of the sudoku still-empty cells, end the recursion. Return True.
+      \subitem{b.} \textbf{Base case} If the sudoku is not solved, i.e.\ we've gone through every possibility, but there are no more possible values for the last cell, end the recursion. Return False.
+      \item \textbf{Else:}
+      \subitem{a.} \textbf{Choosing} Iterating over the still empty cells of the sudoku (markup cells with more than one possible value) using a recursive function. Choose a value from the markup cell's list, to which was applied the candidate checking method, to remove values that were no longer valid due to the filling up of the sudoku.
+      \subitem{b.} \textbf{Exploring} Input that value in the sudoku, tracking our choice and move to the next cell, starting again at step 1.
+      \subitem{c.} \textbf{Unchoosing} If going to the next cell, the valid values list is empty after running the validity check on it, reset the sudoku cell to 0 so that step 2.a.\ works properly, and go back to the previous cell and try the next value (i.e.\ go back to 2.).
+
+    \end{enumerate}
+
+\end{examplebox}
+
+
 
 \section{Profiling}
 
@@ -285,6 +321,12 @@ Another crack in the backtracking algorithm is for sudoku's that have multiple s
 %265|934|187
 %431|587|296
 %Elapsed time: 17843.329435825348 seconds
+
+Having a working solver, profiling was done to identify where time was lost on operations. By running \texttt{cProfile} on our main \texttt{solve\_sudoku.py} file, we got the following output:
+
+
+
+
 
 \chapter{Validation, Unit Tests and CI set up}
 
