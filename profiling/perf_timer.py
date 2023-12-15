@@ -16,7 +16,7 @@ The average time taken for each type of backtracking is then printed.
 @author Created by T.Breitburd on 14/12/2023
 """
 
-from . import solver_tools as st
+from ..src import solver_tools as st
 import numpy as np
 import pandas as pd
 import time
@@ -65,7 +65,7 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
             markup_1 = st.markup(sudoku)
 
     # Check if the sudoku is valid after the marking up
-    valid, message = st.check_sudoku(sudoku)
+    valid, message = st.check_sudoku(sudoku, False)
     if not valid:
         # fmt: off
         raise RuntimeError("The sudoku is no longer valid after markup: "
@@ -110,6 +110,12 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
         # Otherwise the backtracking algorithm will either raise an error or
         # return False, in which case we raise an error.
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
+            valid, message = st.check_sudoku(sudoku, True)
+            if not valid:
+            # fmt: off
+                raise RuntimeError("The sudoku is no longer valid after markup: "
+                           + message)
+            # fmt: on
             return None
         else:
             return None

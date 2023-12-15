@@ -11,9 +11,9 @@ import io
 import os
 import numpy as np
 import pandas as pd
-from . import preprocessing as preproc
-from . import solver_tools as st
-from . import solve_sudoku as ss
+from ..src import preprocessing as preproc
+from ..src import solver_tools as st
+from ..src import solve_sudoku as ss
 import warnings
 import sys
 
@@ -47,7 +47,7 @@ pr = cProfile.Profile()
 pr.enable()
 
 #sudoku = preproc.load_sudoku(input_file)
-#valid, message = st.check_sudoku(sudoku)
+#valid, message = st.check_sudoku(sudoku, False)
 #markup1 = markup(sudoku)
 #box = st.box(sudoku, 2, 3)
 #backtrack_alg(sudoku, markup, backtrack_cells, 0)
@@ -60,5 +60,5 @@ ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
 ps.print_stats()
 print(s.getvalue())
 
-with open("profile.txt", "w+") as file:
+with open("/profiling/profile.txt", "w+") as file:
     file.write(s.getvalue())
