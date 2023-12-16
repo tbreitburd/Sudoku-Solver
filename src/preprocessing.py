@@ -1,10 +1,10 @@
 """!@file preprocessing.py
-@brief Module containing tools for preprocessing
-the sudoku txt file into a useable array
+@brief Module containing tools for preprocessing adn post_processing the sudoku
 
-@details This module contains tools to load
-the sudoku txt file information into a useable array.
-It also contains tools to convert the sudoku array back into the .txt file
+@details This module contains tools to process the sudokus. One function is to
+load the sudoku txt file information into a useable array.
+The other is a function to extract the 3x3 box of a cell,
+and finally a function to convert the sudoku array back into the .txt file
 format, for printing and saving the sudoku once solved.
 
 @author Created by T.Breitburd on 19/11/2023
@@ -16,9 +16,9 @@ import traceback
 
 
 def load_sudoku(path):
-    """!@brief Load the sudoku txt file into a useable array
+    """!@brief Load the sudoku .txt file into a useable Numpy array.
 
-    @details This function takes in a path to a sudoku txt file,
+    @details This function takes in a path to a sudoku .txt file,
     reads the file into a series of strings for each row,
     checks that the file has the correct format,
     then picks out the numbers from the strings, dropping the separators,
@@ -117,8 +117,8 @@ def box(sudoku, row, col):
     and returns a 3x3 array of the sudoku box that cell is in.
 
     @param sudoku The sudoku to extract the box from
-    @param row The row of the cell, 0 indexed
-    @param col The column of the cell, 0 indexed
+    @param row The row of the cell, 0 based index
+    @param col The column of the cell, 0 based index
 
     @return A 3x3 array of the corresponding box.
     """
@@ -164,7 +164,7 @@ def box(sudoku, row, col):
 
 def sudoku_to_output_format(sudoku):
     """!@brief This function takes in a sudoku array,
-    and returns a string in a specific format for the output file.
+    and returns a string in the specific format of the output file.
 
     @details This function takes in a sudoku numpy array, and adds each cell to
     a string, adding in separators, vertical and horizontal

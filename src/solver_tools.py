@@ -4,7 +4,8 @@
 @details This module contains tools to solve the sudoku.
 One of them is a function that creates a markup of possible values,
 for each remaining empty cell in the sudoku.
-The other is a backtracking algorithm that uses a recursive function
+One is a function that checks if the sudoku is valid, and optionally solved.
+The last one is a backtracking algorithm that uses a recursive function
 to solve the sudoku.
 
 @author Created by T.Breitburd on 19/11/2023
@@ -22,7 +23,8 @@ def check_sudoku(sudoku, final_check):
 
     @details This function takes in a sudoku,
     and checks if it is valid, i.e. a maximum of one of each number
-    in each row, column and box.
+    in each row, column and box. Given the final_check boolean, when True,
+    it also checks if the sudoku is solved, i.e. if there are no empty cells.
 
     @param sudoku A 9x9 numpy array containing the sudoku numbers
     @param final_check A boolean, True if it's to check the sudoku is solved
@@ -171,10 +173,15 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     @return A boolean, True if the sudoku is solved,
     False if it is still not solved.
     """
-    # The recursive function method was used from this webpage,
-    # as well as the subapges linked to it:
+    # The recursive function method was developped from these webpages:
     # https://www.geeksforgeeks.org/introduction-to-recursion-data-structure
     # -and-algorithm-tutorials/?ref=lbp
+    # https://stackoverflow.com/questions/24682039/whats-the-worst-case-valid-
+    # sudoku-puzzle-for-simple-backtracking-brute-force-al
+    # https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1188/lectures/
+    # Lecture11/Lecture11.pdf
+    # https://stackoverflow.com/questions/30214531/basics-of-recursion-
+    # in-python
 
     # Base case of the recursion, we have reached the end of the sudoku if:
     if cell_num == len(backtrack_cells):

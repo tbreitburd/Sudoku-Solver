@@ -3,9 +3,11 @@
 
 @details Using functions from modules preprocessing.py and solver_tools.py,
 it takes in a sudoku in txt format (with specific formatting) as input,
-and solves it using a backtracking algorithm, and optionaly a candidate 
-checking method. It then returns the solved sudoku in the same format 
-as the input, printing it to the console and writing it to a txt file, 
+as well as a backtracking type (forward, backward or ordered), and a boolean
+indicating whether to use only backtracking or not. The solver then
+solves it using a backtracking algorithm, and optionaly a candidate
+checking method. It then returns the solved sudoku in the same format
+as the input, printing it to the console and writing it to a txt file,
 in a directory called "sudoku_solutions".
 
 @author Created by T.Breitburd on 19/11/2023
@@ -18,17 +20,35 @@ from . import preprocessing as preproc
 from . import solver_tools as st
 import time
 import os
-import cProfile
-import pstats
-import io
 
-
+# Get the input file path, backtracking type and bactracking_only boolean
+# from the command line
 input_file = sys.argv[1]
 backtracking_type = sys.argv[2]
 bactracking_only = sys.argv[3]
 
 
 def solve_sudoku(input_file, backtracking_type, bactracking_only):
+    """!@brief Solve a sudoku using backtracking algorithm.
+
+    @details This function takes in a sudoku in txt format (with specific
+    formatting) as input, as well as a backtracking type (forward, backward
+    or ordered), and a boolean indicating whether to use only backtracking
+    or not. The solver then solves it using a backtracking algorithm, and
+    optionaly a candidate checking method. It then returns the solved sudoku
+    in the same format as the input, printing it to the console and writing
+    it to a txt file, in a directory called "sudoku_solutions".
+
+    @param input_file Path to the sudoku txt file
+    @param backtracking_type Type of backtracking to use (forward, backward
+    or ordered)
+    @param bactracking_only Boolean indicating whether to use only
+    backtracking or not
+
+    @return Prints the solved sudoku to the console, and writes it to a txt
+    file in a directory called "sudoku_solutions"
+    """
+
     input_path = input_file
     # Load the sudoku from its txt file to a 9x9 numpy array
     sudoku = preproc.load_sudoku(input_path)
@@ -42,7 +62,7 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
         # fmt: on
 
     # Create a markup dataframe of possible values for the sudoku
-    # if Bactracking_only: initialise a second markup dataframe, 
+    # if Bactracking_only: initialise a second markup dataframe,
     # to compare the updated markup with the first one.
 
     if bactracking_only:
@@ -50,10 +70,10 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
         # finds in the sudoku.
         markup_1 = st.markup(sudoku)
         for row in range(9):
-                for col in range(9):
-                    if len(markup_1[col][row]) == 1:
-                        sudoku[row][col] = markup_1[col][row][0]
-    
+            for col in range(9):
+                if len(markup_1[col][row]) == 1:
+                    sudoku[row][col] = markup_1[col][row][0]
+
     else:
         markup_0 = st.markup(sudoku)
         markup_1 = pd.DataFrame(index=range(9), columns=range(9))
@@ -105,6 +125,8 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
             # in ascending order.
             # This is to possibly make the backtracking algorithm faster.
             # From https://learnpython.com/blog/python-custom-sort-function/
+            # and https://stackoverflow.com/questions/1518346/optimizing-the-
+            # backtracking-algorithm-solving-sudoku
             def sorting_key(cell):
                 return len(markup_1[cell[0]][cell[1]])
             backtrack_cells = np.array([backtrack_cells[1],
@@ -123,16 +145,19 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
             print(solved_sudoku_str)
         else:
             print("The backtracking algorithm failed to solve the sudoku. " +
-                    "Please try a different backtracking type. " +
-                    "if the issue persists, the sudoku may be unsolvable.")
+                  "Please try a different backtracking type. " +
+                  "if the issue persists, the sudoku may be unsolvable."
+                  )
 
     # Check if the sudoku is valid after the backtracking
     valid, message = st.check_sudoku(sudoku, True)
     if not valid:
-        raise RuntimeError(
-            "The sudoku is no longer valid or not yet solved" +
-            " after backtracking: " + message
-        )
+        # fmt: off
+        raise RuntimeError("The sudoku is no longer valid or not yet solved"
+                           + " after backtracking: "
+                           + message
+                           )
+        # fmt: on
 
     # Finally, write the solved sudoku to the output file
     # creating the output directory if it doesn't exist yet
@@ -146,8 +171,6 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
     with open(output_path, "w") as file:
         file.write(solved_sudoku_str)
 
-#pr = cProfile.Profile()
-#pr.enable()
 
 start = time.time()
 
@@ -156,13 +179,3 @@ solve_sudoku(input_file, backtracking_type, bactracking_only)
 end = time.time()
 
 print(f"Elapsed time: {end - start} seconds")
-
-#pr.disable()
-#s = io.StringIO()
-#sortby = "cumulative"
-#ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-#ps.print_stats()
-#print(s.getvalue())
-
-#with open("profile.txt", "w+") as file:
-#    file.write(s.getvalue())
