@@ -15,3 +15,4 @@ tryouts.ipynb
 .DS_Store
 sudokus/sudokus.csv
 /profiling/__pycache__
+/profiling/profile.txt
