@@ -1,4 +1,4 @@
-"""@file test_backtrack.py
+"""!@file test_backtrack.py
 
 @brief Test the backtrack algorithm.
 
@@ -52,7 +52,7 @@ backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 # fmt: off
 class TestBacktrack(unittest.TestCase):
     def test_backtrack(self):
-        """@brief Test the backtrack algorithm on a solved sudoku.
+        """!@brief Test the backtrack algorithm on a solved sudoku.
 
         @details The backtrack algorithm should return False and
         not solve the sudoku.
@@ -82,7 +82,7 @@ sudoku2 = np.array(
 
 
 def test_backtrack_2():
-    """@brief Test the backtrack algorithm on an unsolved sudoku.
+    """!@brief Test the backtrack algorithm on an unsolved sudoku.
 
     @details The backtrack algorithm should return False and not solve
     the sudoku.
@@ -91,7 +91,7 @@ def test_backtrack_2():
 
 
 def test_backtrack_3():
-    """@brief Test the backtrack algorithm on an unsolvable sudoku.
+    """!@brief Test the backtrack algorithm on an unsolvable sudoku.
 
     @details The backtrack algorithm should return True and solve the sudoku.
     """

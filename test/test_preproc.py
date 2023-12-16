@@ -36,7 +36,7 @@ import unittest
 
 
 def test_load_sudoku():
-    """@brief Test the load_sudoku function on a sudoku.
+    """!@brief Test the load_sudoku function on a sudoku.
 
     @details The load_sudoku function should return a 9x9 numpy array
     representing the sudoku.
@@ -60,7 +60,7 @@ def test_load_sudoku():
 
 class TestLoadFunction(unittest.TestCase):
     def test_load_sudoku2(self):
-        """@brief Test the load_sudoku function on a sudoku with an invalid
+        """!@brief Test the load_sudoku function on a sudoku with an invalid
         format.
 
         @details The load_sudoku function should raise a SystemExit with exit
@@ -90,7 +90,7 @@ sudoku = np.array(
 
 
 def test_box():
-    """@brief Test the box function on a sudoku.
+    """!@brief Test the box function on a sudoku.
 
     @details The box function should return a 3x3 numpy array representing the
     box.
@@ -105,7 +105,7 @@ def test_box():
 
 
 class TestBox(unittest.TestCase):
-    """@brief Test the box function on a sudoku with an invalid box number.
+    """!@brief Test the box function on a sudoku with an invalid box number.
 
     @details The box function should raise a SystemExit with exit code 1.
     """
@@ -120,7 +120,7 @@ class TestBox(unittest.TestCase):
 
 
 def test_sudoku_to_output_format():
-    """@brief Test the sudoku_to_output_format function on a sudoku.
+    """!@brief Test the sudoku_to_output_format function on a sudoku.
 
     @details The sudoku_to_output_format function should return a string
     representing the sudoku.

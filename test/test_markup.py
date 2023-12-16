@@ -18,7 +18,7 @@ import numpy as np
 
 
 def test_markup():
-    """@brief Test the markup function on a sudoku.
+    """!@brief Test the markup function on a sudoku.
 
     @details The markup function should return a 3D array of shape (9, 9, 9)
     where the first two dimensions correspond to the rows and columns of the
@@ -67,7 +67,7 @@ solved_sudoku = np.array(
 
 class TestMarkup(unittest.TestCase):
     def test_markup_2(self):
-        """@brief Test the markup function on an empty sudoku.
+        """!@brief Test the markup function on an empty sudoku.
 
         @details The markup function should return a warning since this sudoku
         has many solutions.
@@ -76,7 +76,7 @@ class TestMarkup(unittest.TestCase):
             solver_tools.markup(empty_sudoku)
 
     def test_markup_3(self):
-        """@brief Test the markup function on an unsolvable sudoku.
+        """!@brief Test the markup function on an unsolvable sudoku.
 
         @details The markup function should return an error and exit.
         """
@@ -87,7 +87,7 @@ class TestMarkup(unittest.TestCase):
         self.assertEqual(context.exception.code, 1)
 
     def test_markup_4(self):
-        """@brief Test the markup function on a solved sudoku.
+        """!@brief Test the markup function on a solved sudoku.
 
         @details The markup function should return an error and exit.
         """

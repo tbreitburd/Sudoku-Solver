@@ -32,7 +32,7 @@ sudoku_bad_row = np.array(
 
 
 def test_check_sudoku():
-    """@brief Test the check_sudoku function on a sudoku with a bad row.
+    """!@brief Test the check_sudoku function on a sudoku with a bad row.
 
     @details The check_sudoku function should return False and an error
     message.
@@ -59,7 +59,7 @@ sudoku_bad_col = np.array(
 
 
 def test_check_sudoku2():
-    """@brief Test the check_sudoku function on a sudoku with a bad column.
+    """!@brief Test the check_sudoku function on a sudoku with a bad column.
 
     @details The check_sudoku function should return False and an error
     message.
@@ -86,7 +86,7 @@ sudoku_bad_box = np.array(
 
 
 def test_check_sudoku3():
-    """@brief Test the check_sudoku function on a sudoku with a bad box.
+    """!@brief Test the check_sudoku function on a sudoku with a bad box.
 
     @details The check_sudoku function should return False and an error
     message.
@@ -113,7 +113,7 @@ sudoku_good = np.array(
 
 
 def test_check_sudoku5():
-    """@brief Test the check_sudoku function on a good sudoku.
+    """!@brief Test the check_sudoku function on a good sudoku.
 
     @details The check_sudoku function should return True and an empty
     string.
