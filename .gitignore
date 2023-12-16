@@ -14,3 +14,4 @@ sudoku_solutions/
 tryouts.ipynb
 .DS_Store
 sudokus/sudokus.csv
+/profiling/__pycache__

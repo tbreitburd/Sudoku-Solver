@@ -32,7 +32,7 @@ sudoku_bad_row = np.array(
 
 
 def test_check_sudoku():
-    assert st.check_sudoku(sudoku_bad_row) == (
+    assert st.check_sudoku(sudoku_bad_row, False) == (
         False,
         "There are too many 2's in row 5",
     )
@@ -54,7 +54,7 @@ sudoku_bad_col = np.array(
 
 
 def test_check_sudoku2():
-    assert st.check_sudoku(sudoku_bad_col) == (
+    assert st.check_sudoku(sudoku_bad_col, False) == (
         False,
         "There are too many 5's in column 7",
     )
@@ -76,7 +76,7 @@ sudoku_bad_box = np.array(
 
 
 def test_check_sudoku3():
-    assert st.check_sudoku(sudoku_bad_box) == (
+    assert st.check_sudoku(sudoku_bad_box, False) == (
         False,
         "There are too many 5's in box [1,3]",
     )
@@ -98,4 +98,4 @@ sudoku_good = np.array(
 
 
 def test_check_sudoku5():
-    assert st.check_sudoku(sudoku_good) == (True, "_")
+    assert st.check_sudoku(sudoku_good, True) == (True, "_")
