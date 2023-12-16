@@ -16,7 +16,7 @@ The average time taken for each type of backtracking is then printed.
 @author Created by T.Breitburd on 14/12/2023
 """
 
-from ..src import solver_tools as st
+from src import solver_tools as st
 import numpy as np
 import pandas as pd
 import time

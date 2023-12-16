@@ -11,9 +11,9 @@ import io
 import os
 import numpy as np
 import pandas as pd
-from ..src import preprocessing as preproc
-from ..src import solver_tools as st
-from ..src import solve_sudoku as ss
+from src import preprocessing as preproc
+from src import solver_tools as st
+from src import solve_sudoku as ss
 import warnings
 import sys
 
@@ -60,5 +60,5 @@ ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
 ps.print_stats()
 print(s.getvalue())
 
-with open("/profiling/profile.txt", "w+") as file:
+with open("profiling/profile.txt", "w+") as file:
     file.write(s.getvalue())
