@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['src_0',['src',['../namespacesrc.html',1,'']]],
-  ['src_3a_3apreprocessing_1',['preprocessing',['../namespacesrc_1_1preprocessing.html',1,'src']]],
-  ['src_3a_3asolve_5fsudoku_2',['solve_sudoku',['../namespacesrc_1_1solve__sudoku.html',1,'src']]]
+  ['perf_5ftimer_0',['perf_timer',['../namespaceperf__timer.html',1,'']]],
+  ['profiling_1',['profiling',['../namespaceprofiling.html',1,'']]]
 ];

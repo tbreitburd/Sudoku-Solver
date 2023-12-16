@@ -75,12 +75,13 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">solve_sudoku.py File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This file contains the main sudoku solving code.  
+<p>Sudoku solver using backtracking algorithm.
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -90,16 +91,29 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacesrc_1_1solve__sudoku" id="r_namespacesrc_1_1solve__sudoku"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html">src.solve_sudoku</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a46ca61079b4c5f4e64543305781a68f0" id="r_a46ca61079b4c5f4e64543305781a68f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a46ca61079b4c5f4e64543305781a68f0">src.solve_sudoku.solve_sudoku</a> (<a class="el" href="namespacesrc_1_1solve__sudoku.html#a0db06a651dbd35d42c1e7151ccb75c88">input_file</a>, <a class="el" href="namespacesrc_1_1solve__sudoku.html#ace6fdc1e7f7b9c7a3e5775db27649862">backtracking_type</a>, <a class="el" href="namespacesrc_1_1solve__sudoku.html#a11fb0cb70e5e6c3621915983c699f951">bactracking_only</a>)</td></tr>
+<tr class="memdesc:a46ca61079b4c5f4e64543305781a68f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a sudoku using backtracking algorithm.  <br /></td></tr>
+<tr class="separator:a46ca61079b4c5f4e64543305781a68f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a0db06a651dbd35d42c1e7151ccb75c88" id="r_a0db06a651dbd35d42c1e7151ccb75c88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a0db06a651dbd35d42c1e7151ccb75c88">src.solve_sudoku.input_file</a> = sys.argv[1]</td></tr>
 <tr class="separator:a0db06a651dbd35d42c1e7151ccb75c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56f7a87003b57ac095718cee571c3115" id="r_a56f7a87003b57ac095718cee571c3115"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a56f7a87003b57ac095718cee571c3115">src.solve_sudoku.config</a> = cfg.ConfigParser()</td></tr>
-<tr class="separator:a56f7a87003b57ac095718cee571c3115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace6fdc1e7f7b9c7a3e5775db27649862" id="r_ace6fdc1e7f7b9c7a3e5775db27649862"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#ace6fdc1e7f7b9c7a3e5775db27649862">src.solve_sudoku.backtracking_type</a> = sys.argv[2]</td></tr>
+<tr class="separator:ace6fdc1e7f7b9c7a3e5775db27649862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11fb0cb70e5e6c3621915983c699f951" id="r_a11fb0cb70e5e6c3621915983c699f951"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a11fb0cb70e5e6c3621915983c699f951">src.solve_sudoku.bactracking_only</a> = sys.argv[3]</td></tr>
+<tr class="separator:a11fb0cb70e5e6c3621915983c699f951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c4e4676dc7d89167c643b162da6bf86" id="r_a0c4e4676dc7d89167c643b162da6bf86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a0c4e4676dc7d89167c643b162da6bf86">src.solve_sudoku.start</a> = time.time()</td></tr>
+<tr class="separator:a0c4e4676dc7d89167c643b162da6bf86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a613a7329d1ffe2cf086109e9a50bc416" id="r_a613a7329d1ffe2cf086109e9a50bc416"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1solve__sudoku.html#a613a7329d1ffe2cf086109e9a50bc416">src.solve_sudoku.end</a> = time.time()</td></tr>
+<tr class="separator:a613a7329d1ffe2cf086109e9a50bc416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains the main sudoku solving code. </p>
-<p>Using functions from modules ..., it takes in a sudoku in txt format (with specific formatting), solves it using ..., and returns the solved sudoku in the same format as the input. </p><dl class="section author"><dt>Author</dt><dd>Created by T.Breitburd on 19/11/2023 </dd></dl>
+<div class="textblock"><p>Sudoku solver using backtracking algorithm. </p>
+<p>Using functions from modules <a class="el" href="preprocessing_8py.html" title="Module containing tools for preprocessing adn post_processing the sudoku.">preprocessing.py</a> and <a class="el" href="solver__tools_8py.html" title="Module containing tools for solving the sudoku.">solver_tools.py</a>, it takes in a sudoku in txt format (with specific formatting) as input, as well as a backtracking type (forward, backward or ordered), and a boolean indicating whether to use only backtracking or not. The solver then solves it using a backtracking algorithm, and optionaly a candidate checking method. It then returns the solved sudoku in the same format as the input, printing it to the console and writing it to a txt file, in a directory called "sudoku_solutions".</p>
+<dl class="section author"><dt>Author</dt><dd>Created by T.Breitburd on 19/11/2023 </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

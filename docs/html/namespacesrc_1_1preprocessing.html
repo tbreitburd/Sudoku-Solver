@@ -73,9 +73,127 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">src.preprocessing Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab34082599b6c8c5a2d7469f8797f24d5" id="r_ab34082599b6c8c5a2d7469f8797f24d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#ab34082599b6c8c5a2d7469f8797f24d5">load_sudoku</a> (path)</td></tr>
+<tr class="memdesc:ab34082599b6c8c5a2d7469f8797f24d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the sudoku .txt file into a useable Numpy array.  <br /></td></tr>
+<tr class="separator:ab34082599b6c8c5a2d7469f8797f24d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ebf7ad27d279d432c3e353502dcbfa6" id="r_a1ebf7ad27d279d432c3e353502dcbfa6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#a1ebf7ad27d279d432c3e353502dcbfa6">box</a> (sudoku, row, col)</td></tr>
+<tr class="memdesc:a1ebf7ad27d279d432c3e353502dcbfa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a sudoku and a cell's row and column, and returns a 3x3 array of the sudoku box that cell is in.  <br /></td></tr>
+<tr class="separator:a1ebf7ad27d279d432c3e353502dcbfa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121ff6a289113901f45b8f70e0b08e99" id="r_a121ff6a289113901f45b8f70e0b08e99"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#a121ff6a289113901f45b8f70e0b08e99">sudoku_to_output_format</a> (sudoku)</td></tr>
+<tr class="memdesc:a121ff6a289113901f45b8f70e0b08e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a sudoku array, and returns a string in the specific format of the output file.  <br /></td></tr>
+<tr class="separator:a121ff6a289113901f45b8f70e0b08e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a1ebf7ad27d279d432c3e353502dcbfa6" name="a1ebf7ad27d279d432c3e353502dcbfa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ebf7ad27d279d432c3e353502dcbfa6">&#9670;&#160;</a></span>box()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">src.preprocessing.box </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sudoku</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>col</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function takes in a sudoku and a cell's row and column, and returns a 3x3 array of the sudoku box that cell is in. </p>
+<p>The function takes in a sudoku and a cell's row and column, and returns a 3x3 array of the sudoku box that cell is in.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sudoku</td><td>The sudoku to extract the box from </td></tr>
+    <tr><td class="paramname">row</td><td>The row of the cell, 0 based index </td></tr>
+    <tr><td class="paramname">col</td><td>The column of the cell, 0 based index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A 3x3 array of the corresponding box. </dd></dl>
+
+</div>
+</div>
+<a id="ab34082599b6c8c5a2d7469f8797f24d5" name="ab34082599b6c8c5a2d7469f8797f24d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab34082599b6c8c5a2d7469f8797f24d5">&#9670;&#160;</a></span>load_sudoku()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">src.preprocessing.load_sudoku </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load the sudoku .txt file into a useable Numpy array. </p>
+<p>This function takes in a path to a sudoku .txt file, reads the file into a series of strings for each row, checks that the file has the correct format, then picks out the numbers from the strings, dropping the separators, and returns a 9x9 numpy array of the sudoku.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the sudoku txt file</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A 9x9 numpy array containing the sudoku numbers </dd></dl>
+
+</div>
+</div>
+<a id="a121ff6a289113901f45b8f70e0b08e99" name="a121ff6a289113901f45b8f70e0b08e99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a121ff6a289113901f45b8f70e0b08e99">&#9670;&#160;</a></span>sudoku_to_output_format()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">src.preprocessing.sudoku_to_output_format </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sudoku</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function takes in a sudoku array, and returns a string in the specific format of the output file. </p>
+<p>This function takes in a sudoku numpy array, and adds each cell to a string, adding in separators, vertical and horizontal and newlines where necessary, returning a string which when printed will be in the desired sudoku format for the output file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sudoku</td><td>The sudoku numpy array to convert to a string</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string in the format of the output file. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
