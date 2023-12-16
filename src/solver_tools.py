@@ -76,7 +76,7 @@ def markup(sudoku):
     try:
         # Check if the sudoku might have multiple solutions,
         # if yes, give a warning
-        if np.count_nonzero(sudoku) < 16:
+        if np.count_nonzero(sudoku) < 17:
             message = (
                 "This sudoku may have multiple solutions,"
                 + " and the backtracking algorithm will"
