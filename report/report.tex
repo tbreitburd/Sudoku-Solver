@@ -525,19 +525,7 @@ The structure of the project is as follows:
 
 \section{Usability}
 
-The repository comes with a Dockerfile which the user is encouraged to use. One can build an image from it, using:
-
-\begin{lstlisting}[language=bash, caption={How to build the Docker image}]
-  docker build -t c1_coursework .
-\end{lstlisting}
-
-Once the image built, the container can be run using:
-
-\begin{lstlisting}[language=bash, caption={How to run the Docker container}]
-  docker run --rm -ti C1_Coursework
-\end{lstlisting}
-
-This will run a small bash terminal-like interface (-ti). The main solver file \texttt{solve\_sudoku.py} can then be run from the command line using the following command:
+The repository comes with a Dockerfile which the user is encouraged to use. Once the image built and the container running (specific instructions can be found in the README), the main solver file \texttt{solve\_sudoku.py} can then be run from the command line using the following command:
 
 \begin{lstlisting}[language=bash, caption={How to run the solver}]
   python -m src.solve_sudoku path/to/sudoku.txt 'backtracking_type' backtracking_only

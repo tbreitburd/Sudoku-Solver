@@ -1,3 +1,46 @@
-This is a sudoku solver.
+# C1 Coursework - Sudoku Solver
 
-The solver was tested on a multitude of sudokus, which were "borrowed" from the sudoku app on my phone, they have different levels of complexity.
+## Description
+This reporsitory contains the code and written report for the C1 Coursework. The aim was to demonstrate software developping good practice applied to the development of a sudoku solver.
+
+## Contents
+
+Inside this ```tmb76/``` directory, there are a few sub-directories one can explore. The s the code directory (```src/```), which contains all the code used in the solver. The second is the sudokus directory (```sudokus/```), which contains a few sudokus one can use if they don't have sudokus ready. An important note is that the solver will give the solutions in the command line but also store them in a ```sudoku_solutions/``` directory which will be created as the first sudoku is solved. So if there is no ```sudoku_solutions/``` directory in the repository yet, running the solver once should lead to creating one. Then comes the ```profiling/``` directory, which simply enables one to do some profiling on the solver if one were inclined to further improve this solver. It is by no means, the best of the many that exists. The last one is the ```report/``` directory, which contains the LaTeX file for the report, as well as the pdf version of it, along with the references ```.bib``` file.
+More importantly, there are an ```environment.yml``` file and a ```Dockerfile```, which uses it, which one is advised to use.
+
+## How to run the code
+For permissions reasons, the ```Dockerfile``` is not set up to pull the repository directly as it builds the image. Therefore, one must first pull this repository to their local machine and then are free to build the Docker image from the ```Dockerfile```.
+
+To run the solver on a Docker container, one first has to build the image and run the container. This can be done as follows:
+
+```bash
+$ docker build -t c1_coursework
+$ docker run --rm -ti c1_coursework
+```
+
+The ```c1_coursework``` is not a strict instruction, it can be set to any other name the user may prefer. As you run this, the Docker image will get built and the container ran, providing the user with a bash terminal-like interface where the solver code can be run as follows:
+
+```bash
+$ python -m src.solve_sudoku path/to/sudoku.txt 'bactracking_type' backtracking_only
+```
+
+The ```-m``` flag is used to run the file as a module, which is to deal with the relative imports in the code. The path/to/sudoku.txt is the path to the sudoku file, in
+the format below. The ```'backtracking_type'``` argument can either
+be ’forward’, ’backward’, or ’ordered’, this sets the order in which the backtracking algorithm iterates through the sudoku. The ```backtracking_only``` argument must be a
+Bool value, and is used to set the solver to only use backtracking (True) or also use
+the candidate checking method (False). The solver will print the solved sudoku to
+the command line, and also write a .txt file with the same name as the input sudoku
+file, in a ```sudoku_solution/``` directory, which will get created if it doesn’t exist yet.
+For the ```perf_timer.py``` and ```profiling.py``` files, the user can run them from the command line using the following commands:
+
+```bash
+$ python -m profiling.perf_timer backtracking_only
+$ python -m profiling.profiling path/to/sudoku.txt ’backtracking_type’ backtracking_only
+```
+
+The ```profiling.py``` is currently set to profiling the entire solving, but one can decide to profile specific functions of the solver, once they get to grips with how the solver works. The profiling will be printed to the command line but for easier reading, it is also printed to a
+
+The ```perf_timer.py``` file makes use of a ```sudokus.csv``` which is not saved in this repository, but can be easily obtained on this Kaggle page [1]. One can decide to only take a subset of the available sudokus. For the timing results in the report around 2000 sudokus were used.
+
+
+Note on time: Most sudokus should get solved in the order of seconds, though some, like the ```anti_backtracking.txt``` sudoku, can take much longer in the "standard" ```'forward'``` backtracking order. If this happens, the user is encouraged to try the other backtracking orders. The ```perf_timer.py``` can also take a good amount of time, mostly depending on the size of the ```sudokus.csv``` provided. Though, for 2000 sudokus, it took around a few minutes to run. This is based on running all of these on a MacBook Air M2 (2022, Ventura 13.2.1), with 8 GB of Memory, so this may be slower on a container.
