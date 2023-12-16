@@ -97,4 +97,13 @@ dependencies:
   - zipp=3.17.0
   - zlib=1.2.13
   - zstd=1.5.5
+  - pip:
+      - cfgv==3.4.0
+      - distlib==0.3.8
+      - filelock==3.13.1
+      - identify==2.5.33
+      - nodeenv==1.8.0
+      - pre-commit==3.6.0
+      - pyyaml==6.0.1
+      - virtualenv==20.25.0
 prefix: /Users/thomasbreitburd/anaconda3/envs/ResCompCW
