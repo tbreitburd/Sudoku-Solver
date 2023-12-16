@@ -18,6 +18,13 @@ import numpy as np
 
 
 def test_markup():
+    """@brief Test the markup function on a sudoku.
+
+    @details The markup function should return a 3D array of shape (9, 9, 9)
+    where the first two dimensions correspond to the rows and columns of the
+    sudoku and the third dimension contains a list of possible values for each
+    cell of the sudoku.
+    """
     markup_tester = solver_tools.markup(
         preprocessing.load_sudoku("sudokus/sudoku1.txt")
     )
@@ -60,11 +67,19 @@ solved_sudoku = np.array(
 
 class TestMarkup(unittest.TestCase):
     def test_markup_2(self):
-        # Test that a certain input triggers SystemExit with exit code 1
+        """@brief Test the markup function on an empty sudoku.
+
+        @details The markup function should return a warning since this sudoku
+        has many solutions.
+        """
         with self.assertWarns(UserWarning):
             solver_tools.markup(empty_sudoku)
 
     def test_markup_3(self):
+        """@brief Test the markup function on an unsolvable sudoku.
+
+        @details The markup function should return an error and exit.
+        """
         with self.assertRaises(SystemExit) as context:
             solver_tools.markup(unsolvable_sudoku)
 
@@ -72,6 +87,10 @@ class TestMarkup(unittest.TestCase):
         self.assertEqual(context.exception.code, 1)
 
     def test_markup_4(self):
+        """@brief Test the markup function on a solved sudoku.
+
+        @details The markup function should return an error and exit.
+        """
         with self.assertRaises(SystemExit) as context:
             solver_tools.markup(solved_sudoku)
 

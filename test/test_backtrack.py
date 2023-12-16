@@ -1,3 +1,16 @@
+"""@file test_backtrack.py
+
+@brief Test the backtrack algorithm.
+
+@details
+The backtrack algorithm is tested on a solved sudoku, an unsolved sudoku, and
+an unsolvable sudoku. The solved sudoku should return False, the unsolved
+sudoku should return False, and the unsolvable sudoku should return True and
+solve the sudoku.
+
+@author Created by T.Breitburd on 12/2023
+"""
+
 from src import solver_tools
 import numpy as np
 import unittest
@@ -39,6 +52,12 @@ backtrack_cells = np.array([backtrack_cells[1], backtrack_cells[0]]).T
 # fmt: off
 class TestBacktrack(unittest.TestCase):
     def test_backtrack(self):
+        """@brief Test the backtrack algorithm on a solved sudoku.
+
+        @details The backtrack algorithm should return False and
+        not solve the sudoku.
+        """
+
         with self.assertRaises(SystemExit) as context:
             solver_tools.backtrack_alg(sudoku_solved, markup1,
                                        backtrack_cells, 0)
@@ -63,10 +82,19 @@ sudoku2 = np.array(
 
 
 def test_backtrack_2():
+    """@brief Test the backtrack algorithm on an unsolved sudoku.
+
+    @details The backtrack algorithm should return False and not solve
+    the sudoku.
+    """
     assert not solver_tools.backtrack_alg(sudoku2, markup1, backtrack_cells, 0)
 
 
 def test_backtrack_3():
+    """@brief Test the backtrack algorithm on an unsolvable sudoku.
+
+    @details The backtrack algorithm should return True and solve the sudoku.
+    """
     assert solver_tools.backtrack_alg(sudoku, markup1, backtrack_cells, 0)
 
     assert np.array_equal(

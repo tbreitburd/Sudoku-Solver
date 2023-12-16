@@ -36,6 +36,12 @@ import unittest
 
 
 def test_load_sudoku():
+    """@brief Test the load_sudoku function on a sudoku.
+
+    @details The load_sudoku function should return a 9x9 numpy array
+    representing the sudoku.
+    """
+
     np.array_equal(
         preprocessing.load_sudoku("sudokus/sudoku1.txt"),
         [
@@ -54,6 +60,12 @@ def test_load_sudoku():
 
 class TestLoadFunction(unittest.TestCase):
     def test_load_sudoku2(self):
+        """@brief Test the load_sudoku function on a sudoku with an invalid
+        format.
+
+        @details The load_sudoku function should raise a SystemExit with exit
+        code 1.
+        """
         # Test that a certain input triggers SystemExit with exit code 1
         with self.assertRaises(SystemExit) as context:
             preprocessing.load_sudoku("sudokus/bad_format_sudoku.txt")
@@ -78,6 +90,11 @@ sudoku = np.array(
 
 
 def test_box():
+    """@brief Test the box function on a sudoku.
+
+    @details The box function should return a 3x3 numpy array representing the
+    box.
+    """
     # fmt: off
     assert np.array_equal(
         preprocessing.box(sudoku, 1, 5), np.array([[0, 0, 7],
@@ -88,6 +105,11 @@ def test_box():
 
 
 class TestBox(unittest.TestCase):
+    """@brief Test the box function on a sudoku with an invalid box number.
+
+    @details The box function should raise a SystemExit with exit code 1.
+    """
+
     def test_box2(self):
         # Test that a certain input triggers SystemExit with exit code 1
         with self.assertRaises(SystemExit) as context:
@@ -98,6 +120,11 @@ class TestBox(unittest.TestCase):
 
 
 def test_sudoku_to_output_format():
+    """@brief Test the sudoku_to_output_format function on a sudoku.
+
+    @details The sudoku_to_output_format function should return a string
+    representing the sudoku.
+    """
     assert preprocessing.sudoku_to_output_format(sudoku) == (
         "000|007|000\n"
         "000|009|504\n"
