@@ -2,11 +2,17 @@
 @brief Module containing tools for solving the sudoku.
 
 @details This module contains tools to solve the sudoku.
-One of them is a function that creates a markup of possible values,
-for each remaining empty cell in the sudoku.
-One is a function that checks if the sudoku is valid, and optionally solved.
+The markup() function creates a markup of possible values,
+for each remaining empty cell in the sudoku. It takes in a sudoku, and for each
+empty cell, lists the possible values for that cell, by checking the row,
+column, and box that cell is in for values that are already present.
+The check_sudoku() as its name suggests checks if the sudoku is valid,
+and optionally, if it is solved.
 The last one is a backtracking algorithm that uses a recursive function
-to solve the sudoku.
+to solve the sudoku. It takes in a sudoku, the associated markup dataframe,
+a list of the cells that we need to backtrack through from that markup,
+and the cell number we are currently looking at within that list,
+and returns a solved sudoku, if possible.
 
 @author Created by T.Breitburd on 19/11/2023
 """
@@ -31,6 +37,24 @@ def check_sudoku(sudoku, final_check):
 
     @return A boolean, True if the sudoku is valid, False if it is not.
     And a string, containing a message explaining why the sudoku is not valid.
+
+    @example This example describes how to use the check_sudoku function.
+
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                    [0,0,0,0,0,0,0,0,0],
+    ...                    [0,0,0,0,0,8,0,0,0],
+    ...                    [0,3,0,0,0,0,0,9,0],
+    ...                    [0,0,1,0,0,0,0,9,0],
+    ...                    [0,0,0,7,0,0,0,0,0],
+    ...                    [0,0,0,4,6,2,0,0,0],
+    ...                    [0,8,0,0,0,0,0,0,0],
+    ...                    [0,7,0,0,0,0,3,0,0]])
+    >>> check, message = check_sudoku(sudoku, False)
+    >>> print(check)
+    False
+    >>> print(message)
+    There are too many 9's in column 7
     """
     # Check if the sudoku is filled completely:
     if final_check:
@@ -74,6 +98,36 @@ def markup(sudoku):
     @param sudoku A 9x9 numpy array containing the sudoku numbers
 
     @return A 9x9 dataframe containing lists of possible values for each cell.
+
+    @exception UserWarning Raised if the sudoku might have multiple solutions,
+    and the backtracking algorithm will return the first it finds.
+    @exception RuntimeError Raised if the sudoku is not solvable,
+    already solved, or there may be a disagreement between the arguments.
+
+    @example This example describes how to use the markup function.
+
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                   [0,0,0,0,0,0,0,0,0],
+    ...                   [0,0,0,0,0,8,0,0,0],
+    ...                   [0,3,0,0,0,0,0,9,0],
+    ...                   [0,0,1,0,0,0,0,0,0],
+    ...                   [0,0,0,7,0,0,0,0,0],
+    ...                   [0,0,0,4,6,2,0,0,0],
+    ...                   [0,8,0,0,0,0,0,0,0],
+    ...                   [0,7,0,0,0,0,3,0,0]])
+    >>> markup_ = markup(sudoku)
+    >>> print(markup_)
+                             0                1                      2  \
+    0        [1, 2, 3, 6, 8, 9]     [1, 2, 6, 9]                    [4]
+    1  [1, 2, 3, 5, 6, 7, 8, 9]  [1, 2, 5, 6, 9]  [2, 3, 5, 6, 7, 8, 9]
+    2     [1, 2, 3, 5, 6, 7, 9]  [1, 2, 5, 6, 9]     [2, 3, 5, 6, 7, 9]
+    3        [2, 4, 5, 6, 7, 8]              [3]        [2, 5, 6, 7, 8]
+    4     [2, 4, 5, 6, 7, 8, 9]  [2, 4, 5, 6, 9]                    [1]
+    5        [2, 4, 5, 6, 8, 9]  [2, 4, 5, 6, 9]        [2, 5, 6, 8, 9]
+    6              [1, 3, 5, 9]        [1, 5, 9]              [3, 5, 9]
+    7     [1, 2, 3, 4, 5, 6, 9]              [8]        [2, 3, 5, 6, 9]
+    8        [1, 2, 4, 5, 6, 9]      ...................................
     """
     try:
         # Check if the sudoku might have multiple solutions,
@@ -160,7 +214,14 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     the associated markup dataframe of possible values for the sudoku cells,
     a list of the cells that we need to backtrack through from that markup,
     the cell number we are currently looking at within that list,
-    and returns a solved sudoku, if possible.
+    and returns a solved sudoku, if possible. Using a recursive function
+    structure, it iterates through the backtracking_cells list,
+    and for each cell, it tries each of the possible values for that cell,
+    and if it fails, it backtracks to the previous cell, and tries the next
+    value for that cell, and so on. If it reaches the end of the list,
+    then the sudoku is solved. If it fails at cell_num = 0, or technically
+    reaches the last cell having tried all possible values for the previous
+    cells, then the sudoku is not solvable.
 
     @param sudoku A 9x9 numpy array containing the sudoku numbers
     @param markup_ A 9x9 dataframe containing lists of possible values
@@ -172,16 +233,52 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
 
     @return A boolean, True if the sudoku is solved,
     False if it is still not solved.
+
+    @note This function is based on the recursive function method,
+    and the backtracking lecture, as described in the following webpages:
+    https://www.geeksforgeeks.org/introduction-to-recursion-data-structure
+    -and-algorithm-tutorials/?ref=lbp
+    https://stackoverflow.com/questions/24682039/whats-the-worst-case-valid-
+    sudoku-puzzle-for-simple-backtracking-brute-force-al
+    https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1188/lectures/
+    Lecture11/Lecture11.pdf
+
+    @note This function is also based on the following webpage:
+
+    @exception RuntimeError Raised if the sudoku is not solvable,
+    already solved, or there may be a disagreement between the arguments.
+
+    @example This example describes how to use the backtrack_alg function.
+
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                   [0,0,0,0,0,0,0,0,0],
+    ...                   [0,0,0,0,0,8,0,0,0],
+    ...                   [0,3,0,0,0,0,0,9,0],
+    ...                   [0,0,1,0,0,0,0,0,0],
+    ...                   [0,0,0,7,0,0,0,0,0],
+    ...                   [0,0,0,4,6,2,0,0,0],
+    ...                   [0,8,0,0,0,0,0,0,0],
+    ...                   [0,7,0,0,0,0,3,0,0]])
+    >>> markup_ = markup(sudoku)
+    >>> backtrack_cells = np.where(markup_1.map(len) > 1)
+    >>> backtrack_cells = np.array([backtrack_cells[1],
+    ...                             backtrack_cells[0]]).T
+    >>> backtrack_alg(sudoku, markup_, backtrack_cells, 0)
+    True
+    >>> print(sudoku)
+    np.array([[1,2,4,3,5,6,8,7,9],
+              [3,5,8,1,7,9,2,4,6],
+              [6,9,7,2,4,8,1,3,5],
+              [2,3,5,6,1,4,7,9,8],
+              [7,4,1,8,9,3,5,6,2],
+              [8,6,9,7,2,5,4,1,3],
+              [5,1,3,9,8,7,6,2,4],
+              [4,8,2,5,6,1,9,3,7],
+              [9,7,6,4,3,2,8,5,1]])
+    @endcode
+
     """
-    # The recursive function method was developped from these webpages:
-    # https://www.geeksforgeeks.org/introduction-to-recursion-data-structure
-    # -and-algorithm-tutorials/?ref=lbp
-    # https://stackoverflow.com/questions/24682039/whats-the-worst-case-valid-
-    # sudoku-puzzle-for-simple-backtracking-brute-force-al
-    # https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1188/lectures/
-    # Lecture11/Lecture11.pdf
-    # https://stackoverflow.com/questions/30214531/basics-of-recursion-
-    # in-python
 
     # Base case of the recursion, we have reached the end of the sudoku if:
     if cell_num == len(backtrack_cells):

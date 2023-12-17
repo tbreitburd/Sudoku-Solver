@@ -47,6 +47,41 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
 
     @return Prints the solved sudoku to the console, and writes it to a txt
     file in a directory called "sudoku_solutions"
+
+    @exception RuntimeError Raised if the sudoku is not valid at loading time,
+    after markup, or after backtracking.
+    @exception RuntimeError Raised if the backtracking algorithm fails to
+    solve the sudoku.
+
+    @example This example describes how to use the solve_sudoku function,
+    within a python script.
+
+    @code
+    $ cat path/to/sudoku.txt
+    104|050|070
+    050|100|000
+    000|008|005
+    ---+---+---
+    030|014|090
+    001|000|502
+    000|700|010
+    ---+---+---
+    003|462|000
+    080|030|000
+    070|501|300
+
+    >>> solve_sudoku("path/to/sudoku.txt", "ordered", True)
+    124|356|879
+    358|179|246
+    697|248|135
+    ---+---+---
+    235|614|798
+    741|893|562
+    869|725|413
+    ---+---+---
+    513|462|987
+    482|937|651
+    976|581|324
     """
 
     input_path = input_file

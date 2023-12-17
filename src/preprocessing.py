@@ -1,11 +1,19 @@
 """!@file preprocessing.py
-@brief Module containing tools for preprocessing adn post_processing the sudoku
+@brief Module containing tools for preprocessing and post_processing the sudoku
 
-@details This module contains tools to process the sudokus. One function is to
-load the sudoku txt file information into a useable array.
-The other is a function to extract the 3x3 box of a cell,
-and finally a function to convert the sudoku array back into the .txt file
-format, for printing and saving the sudoku once solved.
+@details This module contains tools to process the sudokus. It contains 3
+functions that only focus on getting the sudoku from txt file to array form and
+inversely, and to get the 3x3 box the current cell is in. In other words, no
+function in this module does any modification to the sudoku. One function is to
+load the sudoku txt file information into a useable array, checking that the
+format is as expected. The box() function is to extract the 3x3 box a cell is
+in, and the sudoku_to_output_format() function is to convert the sudoku array
+back into the .txt file format, for printing and saving the sudoku once solved.
+
+@example sudoku = load_sudoku("path/to/sudoku.txt")
+@example box = box(sudoku, 4, 5)
+@example sudoku_output = sudoku_to_output_format(sudoku)
+
 
 @author Created by T.Breitburd on 19/11/2023
 """
@@ -27,21 +35,68 @@ def load_sudoku(path):
     @param path Path to the sudoku txt file
 
     @return A 9x9 numpy array containing the sudoku numbers
+
+    @exception FileNotFoundError Raised if the sudoku file is not found
+    @exception ValueError Raised if the sudoku file has an incorrect format,
+    this includes incorrect number of rows, columns, separators, and incorrect
+    characters for the separators.
+
+    @example This example describes how to use the load_sudoku function.
+
+    @code
+    $ cat path/to/sudoku.txt
+    004|050|070
+    000|000|000
+    000|008|000
+    ---+---+---
+    030|000|090
+    001|000|000
+    000|700|000
+    ---+---+---
+    000|462|000
+    080|000|000
+    070|000|300
+    >>> sudoku = load_sudoku("path/to/sudoku.txt")
+    >>> print(sudoku)
+    np.array([[0,0,4,0,5,0,0,7,0],
+              [0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,8,0,0,0],
+              [0,3,0,0,0,0,0,9,0],
+              [0,0,1,0,0,0,0,0,0],
+              [0,0,0,7,0,0,0,0,0],
+              [0,0,0,4,6,2,0,0,0],
+              [0,8,0,0,0,0,0,0,0],
+              [0,7,0,0,0,0,3,0,0]])
     """
     # We use os to have relative paths be portable
     proj_dir = os.getcwd()
     sudoku_path = os.path.join(proj_dir, path)
 
-    # Read the sudoku file, and drop the separator lines
+    # Read the sudoku file
+    # fmt: off
     try:
-        f = open(sudoku_path, "r")
+        with open(sudoku_path, "r") as f:
+            # Check that the file is a text file, taking the extension of the
+            # file and checking it is .txt
+            if not os.path.splitext(sudoku_path)[1] == ".txt":
+                raise Exception("The sudoku file is not a .txt file: "
+                                + sudoku_path)
+
     except FileNotFoundError:
         raise FileNotFoundError(
             "The sudoku file was not found at the path: " + sudoku_path
         )
+    except IOError:
+        print("Unable to open the sudoku file to read at the path: "
+              + sudoku_path)
+    # fmt: on
+
+    except Exception as e:
+        print("An unexpected error occured: " + str(e))
 
     try:
-        sudoku_rows = f.readlines()
+        with open(sudoku_path, "r") as f:
+            sudoku_rows = f.readlines()
 
         # Check that the sudoku file has the correct format:
         # There should be 11 rows
@@ -121,6 +176,27 @@ def box(sudoku, row, col):
     @param col The column of the cell, 0 based index
 
     @return A 3x3 array of the corresponding box.
+
+    @exception ValueError Raised if the cell coordinates are not valid,
+    as they must be between 0 and 8 inclusive.
+
+    @example This example describes how to use the box function.
+
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                   [0,0,0,0,0,0,0,0,0],
+    ...                   [0,0,0,0,0,8,0,0,0],
+    ...                   [0,3,0,0,0,0,0,9,0],
+    ...                   [0,0,1,0,0,0,0,0,0],
+    ...                   [0,0,0,7,0,0,0,0,0],
+    ...                   [0,0,0,4,6,2,0,0,0],
+    ...                   [0,8,0,0,0,0,0,0,0],
+    ...                   [0,7,0,0,0,0,3,0,0]])
+    >>> box = box(sudoku, 7, 5)
+    >>> print(box)
+    [[4 6 2]
+     [0 0 0]
+     [0 0 0]]
     """
     # Check that the cell coordinates are valid
     try:
@@ -174,6 +250,34 @@ def sudoku_to_output_format(sudoku):
     @param sudoku The sudoku numpy array to convert to a string
 
     @return A string in the format of the output file.
+
+    @example This example describes how to use the sudoku_to_output_format
+    function.
+
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                   [0,0,0,0,0,0,0,0,0],
+    ...                   [0,0,0,0,0,8,0,0,0],
+    ...                   [0,3,0,0,0,0,0,9,0],
+    ...                   [0,0,1,0,0,0,0,0,0],
+    ...                   [0,0,0,7,0,0,0,0,0],
+    ...                   [0,0,0,4,6,2,0,0,0],
+    ...                   [0,8,0,0,0,0,0,0,0],
+    ...                   [0,7,0,0,0,0,3,0,0]])
+    >>> sudoku_output = sudoku_to_output_format(sudoku)
+    >>> print(sudoku_output)
+    004|050|070
+    000|000|000
+    000|008|000
+    ---+---+---
+    030|000|090
+    001|000|000
+    000|700|000
+    ---+---+---
+    000|462|000
+    080|000|000
+    070|000|300
+    @endcode
     """
     # Initialize the output string
     sudoku_str = ""
