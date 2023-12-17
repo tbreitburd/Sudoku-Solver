@@ -179,7 +179,7 @@ A backtracking algorithm is the brute-force use of that latter method\cite{corne
 
 \vspace*{1\baselineskip}
 It is a rather simple algorithm to understand. It offers the guarantee of finding a solution, if one exists, eventually. It will even solve an empty grid though only finding one of the $6 \times 10^{21}$ possible solutions\cite{cornell_sudoku3}.
-It is a brute-force algorithm, simply iterating through all possible combinations of values, until it finds one that is valid. On average, its speed depends on the number of empty cells, and the number of possible values for those cells, but can be sometimes very slow (see sec. 3.1.3). Additionaly, this naïve version, tests all values from 1 to 9. The cost of the algorithm is then at most $\mathcal{O}(9^{N_{empty cells}})$, where $N_{empty cells}$ is the number of empty cells in the sudoku.
+It is a brute-force algorithm, simply iterating through all possible combinations of values, until it finds one that is valid. On average, its speed depends on the number of empty cells, and the number of possible values for those cells, but can be sometimes very slow (see sec. 2.1.3). Additionaly, this naïve version, tests all values from 1 to 9. The cost of the algorithm is then at most $\mathcal{O}(9^{N_{empty cells}})$, where $N_{empty cells}$ is the number of empty cells in the sudoku.
 
 \section{Modified Backtracking Algorithm}
 
@@ -278,7 +278,7 @@ The first attempt consisted of having an embedded \texttt{while} and \texttt{for
       # do something
       recursive_function(args_2)
     # do something
-    return something else
+    return something_else
 \end{lstlisting}
 
 In doing so, the function is called multiple times, at multiple ``recursive levels'' until a base case condition is fulfilled, a maximum number of recursive depth is reached\cite{stackoverflow_recursion_depth}, or something else depending on what the context and goal of the function is, which stops the recursion. The main benefit, is  that recursive levels are akin to embedded for loops, but without the worry of having to set the number of loops, so it is much neater when coded.
@@ -324,7 +324,7 @@ But this is purely dependent on the order in which the algorithm iterates throug
 Having a working solver, \texttt{cProfile} was ran on our main \texttt{solve\_sudoku.py} file, we got the following output:
 
 
-\begin{lstlisting}[language=Bash,caption={First profiling output}, basicstyle=\tiny]
+\begin{lstlisting}[language=Bash,caption={First profiling output, the right side describing what is running has been shortened for easier reading}, basicstyle=\tiny]
 ncalls  tottime  percall  cumtime  percall filename:lineno(function)
     1    0.000    0.000    0.083    0.083 /src/solve_sudoku.py:25(solve_sudoku
     3    0.001    0.000    0.051    0.017 /src/solver_tools.py:54(markup)
@@ -349,7 +349,7 @@ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
   ....   .....    .....    .....    ..... mostly built-in functions of packages
 \end{lstlisting}
 
-A large amount of time was being spent on list comprehension lines used to get possible values, boxes, etc. This could be fixed by using sets. Sets have the advantage of only containing unique values\cite{freecodecamp_python_set_vs_list}. This means that originally, the code would search through the full row, column and box lists, with duplicates, and zeros. Whereas when using the union of the rows, columns, and boxes sets, is combined in one set of at most 10 values. The time on these lines to be run could thus be reduced significantly. The profiling output after this change was:
+A large amount of time was being spent on list comprehension lines used to get possible values, boxes, etc. This could be fixed by using sets. Sets have the advantage of only containing unique values\cite{freecodecamp_python_set_vs_list}. This means that originally, the code would search through the full row, column and box lists, with duplicates, and zeros. Whereas when using the union of the rows, columns, and boxes sets, we combine them in one set of at most 10 values. The time spent on these lines when running could thus be reduced significantly. The profiling output after this change was:
 
 \begin{lstlisting}[language=Bash, caption={Profiling output after list comprehension improvements}, basicstyle=\tiny]
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
@@ -394,7 +394,7 @@ It can be seen the cumulative times are much lower, and the time spent on some l
 000|000|000
 \end{lstlisting}
 
-Only timing the line where the \texttt{solve\_sudoku()} function is called, the improvement was from 0.049503 seconds to 0.020695 seconds after. One could see, however, that a large portion of the time is taken by pandas DataFrame functions. Thus one could ask if the candidate checking method was actually slowing down the solver. Testing this using an easy sudoku which can be solved entirely by the candidate checking method:
+Only timing the line where the \texttt{solve\_sudoku()} function is called, the improvement was from 0.049503 seconds to 0.020695 seconds after. One could see, however, that a large portion of the time is taken by pandas DataFrame functions (see Listing 2.4). Thus one could ask if the candidate checking method was actually slowing down the solver. Testing this using an easy sudoku which can be solved entirely by the candidate checking method:
 
 \begin{lstlisting}[caption= {sudoku\_easy.txt}]
 002|560|470
@@ -409,7 +409,7 @@ Only timing the line where the \texttt{solve\_sudoku()} function is called, the 
 005|030|007
 060|709|200
 \end{lstlisting}
-
+\newpage
 The following profiling output was obtained:
 
 \begin{lstlisting}[language=Bash, caption={Profiling output for easy sudoku},basicstyle=\tiny]
@@ -441,24 +441,24 @@ The following profiling output was obtained:
        ....    .....    .....    .....    ..... mostly built-in functions of packages
 \end{lstlisting}
 
-Running the solver for this sudoku, it found a solution in 0.05651 seconds but did so much quicker in 0.00988 seconds when only getting the markup file once without updating it. Unfortunately, this meant that conducting a candidate check to get rid of obvious values was actually not reducing the solving time overall. Using the \texttt{perf\_timer.py} file described in section 3.1.3., a comparison was made between average runtime for many sudokus, with and without the candidate checking method. The results showed almost a factor of 3 decrease in runtime when using backtracking only and marking up the sudoku just once (Backtracking only: 0.0054 compared to 0.0167 seconds).
+Running the solver for this sudoku, it found a solution in 0.05651 seconds but did so much quicker in 0.00988 seconds when only getting the markup file once without updating it, and running backtracking from there. Unfortunately, this meant that conducting a candidate check to get rid of obvious values was actually not reducing the solving time overall. Using the \texttt{perf\_timer.py} file described in section 3.1.3., a comparison was made between average runtime for many sudokus, with and without the candidate checking method. The results showed almost a factor of 3 decrease in runtime when using backtracking only and marking up the sudoku just once (Backtracking only takes 0.0054 compared to 0.0167 seconds).
 
 \subsection{Future improvements}
 
 Unlike the assumption made in section 2.4., numpy arrays of 3 dimensions can contain lists of different sizes, so an improvement in memory use could be made by switching to numpy for the markups\cite{numpy_vs_pandas}.
-In the interest of approaching sudokus with mulitple solutions, one backtracking order could be set up to shuffle the backtracking cells using \texttt{numpy.random.suffle()} on the backtrack cells list, this way obtaining many different solutions. Though it would run the risk of being slow, as we know the order of the cells has a large impact on the runtime.
+In the interest of approaching sudokus with multiple solutions, a random backtracking order could be set up to shuffle the backtracking cells using \texttt{numpy.random.suffle()} on the backtrack cells list, this way obtaining many different solutions. Though it would run the risk of being slow, as we know the order of the cells has a large impact on the runtime.
 
 \chapter{Validation, Unit Tests and CI set up}
 
 \section{Validation and Unit Tests}
 
-Most sudokus in the offered \texttt{sudokus/} directory were either obtained from the sudoku app from sudoku.com\cite{sudoku_com} by EasyBrain. Thus, the solutions given by the solver were checked using these. More importantly, especially the case of multiple solutions, a \texttt{check\_sudoku()} function was written to check that the sudoku is valid. This means checking there are no duplicates in the rows, columns and boxes. It is used at different points in the solver, checking the sudoku is valid after loading, after candidate checking, and after backtracking. Particularly useful in the \texttt{perf\_timer.py} file, it checks that the solver did indeed find a valid solution, without the user checking that solution. It takes an argument \texttt{final\_check} which, if set to True, will check there are no empty cells left.
+Most sudokus in the offered \texttt{sudokus/} directory were obtained from the sudoku app from sudoku.com\cite{sudoku_com} by EasyBrain. Thus, the solutions given by the solver were checked using these. More importantly, a \texttt{check\_sudoku()} function was written to check that the sudoku is at least valid. This means checking there are no duplicates in the rows, columns and boxes. It was used at different points in the solver, checking the sudoku is valid after loading, after candidate checking, and after backtracking. Particularly useful in the \texttt{perf\_timer.py} file, since the solutions are not returned, it checks that the solver did indeed find a valid solution. It takes an argument \texttt{final\_check} which, if set to True, will check there are no empty cells left.
 Multiple error traps were set in the functions and main code. They include checks to ensure the format of the input sudoku is correct, and multiple checks to ensure the sudoku is valid at different points in the solver, and that it is not unsolvable. If any of these checks fail, the solver will stop and print an appropriate error message, with a traceback to the line where the error occured, or a warning.
-Unit tests were also set up. They are mostly straightforward, and they check the functions returns the expected outputs. They either check that the correct answer is given or, for a given ``bad'' input, that they do raise a warning or error.
+Unit tests were also set up. They are mostly straightforward, and they check the functions return the expected outputs. They either check that the correct answer is given or, for a given ``bad'' input, that corresponding errors and warnings are raised.
 
 \section{CI set up}
 
-Continuous Integration of this project was set up using a \texttt{pre-commit-config.yaml} file. This automatically runs checks on the code before every commit:
+Continuous Integration of this project was set up using a \texttt{pre-commit-config.yaml} file. This sets up automatic checks on the code before every commit:
 
 \begin{enumerate}
   \item \textbf{\texttt{check-yaml}} Checks that the \texttt{.yaml} files were not changed. This includes the \texttt{pre-commit-config.yaml} file itself.
@@ -469,7 +469,7 @@ Continuous Integration of this project was set up using a \texttt{pre-commit-con
   \item \textbf{\texttt{pytest}} Runs all the files that fall under a certain naming convention (Here: \texttt{\^test//test\_.\*\.py}, i.e.\ all files in the \texttt{test/} directory that start with \texttt{test\_} and end with \texttt{.py}, to avoid an error with pytest catchin the \texttt{\_\_pycache\_\_} files in the \texttt{test/} directory).
 \end{enumerate}
 
-The code was also written with Doxygen compatible documentation, and accordingly, there was a \texttt{Doxyfile} created to generate the documentation. There should be a \texttt{html/} folder in the \texttt{docs/} directory, but Doxygen can be run to get it if it is missing.
+The code was also written with Doxygen compatible documentation, and accordingly, there was a \texttt{Doxyfile} created to generate the documentation. There should be a \texttt{html/} folder in the \texttt{docs/} directory, but Doxygen can be run to regenerate it if missing.
 
 
 \chapter{Packaging and Usability}
@@ -485,6 +485,10 @@ The structure of the project is as follows:
   |-- docs/
   |   |-- Doxyfile
   |    -- html/
+  |-- profiling/
+  |   |-- perf_timer.py
+  |   |-- profiling.py
+  |    -- profile.txt
   |-- report/
   |   |-- refs.bib
   |   |-- report.pdf
@@ -494,16 +498,6 @@ The structure of the project is as follows:
   |   |-- preprocessing.py
   |   |-- solver_tools.py
   |    -- solve_sudoku.py
-  |-- profiling/
-  |   |-- perf_timer.py
-  |   |-- profiling.py
-  |    -- profile.txt
-  |-- test/
-  |   |-- __init__.py
-  |   |-- test_preproc.py
-  |   |-- test_markup.py
-  |   |-- test_backtrack.py
-  |    -- test_check_sudoku.py
   |-- sudokus/
   |   |-- anti_backtracking.txt
   |   |-- bad_format_sudoku.txt
@@ -513,10 +507,17 @@ The structure of the project is as follows:
   |   |-- sudoku_test.txt
   |   |-- sudoku1.txt
   |    -- sudoku2.txt
+  |-- test/
+  |   |-- __init__.py
+  |   |-- test_preproc.py
+  |   |-- test_markup.py
+  |   |-- test_backtrack.py
+  |    -- test_check_sudoku.py
   |-- .gitignore
   |-- .pre-commit-config.yaml
-  |-- environment.yml
   |-- Dockerfile
+  |-- environment.yml
+  |-- Instructions.md
   |-- LICENSE
    -- README.md
 
@@ -535,7 +536,7 @@ The \texttt{-m} flag is used to run the file as a module, which is to deal with 
 For the \texttt{perf\_timer.py} and \texttt{profiling.py} files, the user can run them from the command line using the following commands:
 
 \begin{lstlisting}[language=bash, caption={How to run the profiling and timing files}]
-  python -m profiling.perf_timer backtracking_only
+  python -m profiling.perf_timer path/to/sudokus.csv backtracking_only
   python -m profiling.profiling path/to/sudoku.txt 'backtracking_type' backtracking_only
 \end{lstlisting}
 
