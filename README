@@ -41,7 +41,7 @@ The ```backtracking_only``` argument must be a Bool value, and is used to set th
 For the ```perf_timer.py``` and ```profiling.py``` files, the user can run them from the command line using the following commands:
 
 ```bash
-$ python -m profiling.perf_timer backtracking_only
+$ python -m profiling.perf_timer path/to/sudokus.csv backtracking_only
 $ python -m profiling.profiling path/to/sudoku.txt ’backtracking_type’ backtracking_only
 ```
 
