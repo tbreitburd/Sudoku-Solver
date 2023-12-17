@@ -26,7 +26,8 @@ import pandas as pd
 import time
 import sys
 
-backtracking_only = sys.argv[1]
+sudokus_path = sys.argv[1]
+backtracking_only = sys.argv[2]
 
 
 def solve_for_timing(sudoku, backtracking_type, bactrack_only):
@@ -138,7 +139,7 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
 
 
 # Read sudokus from sudokus.csv, and store them in a dataframe
-sudokus_df = pd.read_csv("sudokus/sudokus.csv", header=None)
+sudokus_df = pd.read_csv(sudokus_path, header=None)
 time_forward = []
 time_backward = []
 time_ordered = []
