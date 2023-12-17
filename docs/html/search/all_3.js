@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['duration_0',['duration',['../namespaceperf__timer.html#a534793f7280a5016f4db91ce5de83c1b',1,'perf_timer']]]
+  ['candidate_20checking_0',['Sudoku solver using backtracking and candidate checking',['../index.html',1,'']]],
+  ['check_5fsudoku_1',['check_sudoku',['../namespacesrc_1_1solver__tools.html#a23fda9c72f3df84d14f63c5a0250d0ba',1,'src::solver_tools']]],
+  ['checking_2',['Sudoku solver using backtracking and candidate checking',['../index.html',1,'']]]
 ];

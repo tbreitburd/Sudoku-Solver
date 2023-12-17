@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sudoku Solver: Main Page</title>
+<title>Sudoku Solver: Sudoku solver using backtracking and candidate checking</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,10 +68,19 @@ $(function() {
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">Sudoku Solver Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Sudoku solver using backtracking and candidate checking </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p>This is the documentation for the sudoku solver.</p>
+<h1><a class="anchor" id="intro_sec"></a>
+Introduction</h1>
+<p>This is a sudoku solver, using a backtracking algorithm, and a candidate checking method. It takes in a sudoku in txt format (with specific formatting) as input, as well as a backtracking type (forward, backward or ordered), and a boolean indicating whether to use only backtracking or not. The solver then solves it using a backtracking algorithm, and optionaly a candidate checking method. It then returns the solved sudoku in the same format as the input, printing it to the console and writing it to a txt file, in a directory called "sudoku_solutions". There is a test module, which contains unit tests for the solver, it is worth exploring. There is also a profiling module, to profile the performance of the solver, and its different functions, especially if one wants to further improve this solver.</p>
+<h1><a class="anchor" id="install_sec"></a>
+Installation &amp; Use</h1>
+<p>To install the solver, simply download the repository, and once in the directory in which the solver was placed, run the following command in the terminal, from the root of the repository: </p><div class="fragment"><div class="line">python -m <a class="code hl_namespace" href="namespacesrc_1_1solve__sudoku.html">src.solve_sudoku</a> &lt;input_file&gt; &lt;backtracking_type&gt; &lt;bactracking_only&gt;</div>
+<div class="ttc" id="anamespacesrc_1_1solve__sudoku_html"><div class="ttname"><a href="namespacesrc_1_1solve__sudoku.html">src.solve_sudoku</a></div><div class="ttdef"><b>Definition</b> solve_sudoku.py:1</div></div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
