@@ -4,7 +4,8 @@
 backtracking algorithm, for different types of backtracking.
 
 @details Using functions from modules preprocessing.py and solver_tools.py,
-it takes in a csv file containing a list of sudokus,
+it takes in a csv file containing a list of sudokus from:
+https://www.kaggle.com/datasets/bryanpark/sudoku/data,
 and times the performance of the backtracking algorithm
 for each sudoku, for three different types of backtracking:
 forward, backward and ordered.
@@ -12,6 +13,14 @@ forward, backward and ordered.
 The sudokus are solved using the backtracking algorithm,
 and the time taken to solve each sudoku is recorded.
 The average time taken for each type of backtracking is then printed.
+
+@example This file can be run from the command line as follows:
+@code
+>>> $ python -m profiling.perf_timer False
+Average time taken for forward backtracking: 0.00000000000000000000
+Average time taken for backward backtracking: 0.00000000000000000000
+Average time taken for ordered backtracking: 0.00000000000000000000
+@endcode
 
 @author Created by T.Breitburd on 14/12/2023
 """
@@ -24,6 +33,7 @@ import sys
 
 backtracking_only = sys.argv[1]
 
+
 def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     """!@brief Solve the sudoku.
 
@@ -35,6 +45,36 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     "ordered", specifying the type of backtracking to use.
 
     @return None
+
+    @throws RuntimeError if the sudoku is no longer valid after the markup and
+    the backtracking algorithm is applied.
+
+    @throws RuntimeError if the backtracking algorithm fails to solve the
+    sudoku.
+
+    @example This function can be used as follows:
+    @code
+    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
+    ...                   [0,0,0,0,0,0,0,0,0],
+    ...                   [0,0,0,0,0,8,0,0,0],
+    ...                   [0,3,0,0,0,0,0,9,0],
+    ...                   [0,0,1,0,0,0,0,0,0],
+    ...                   [0,0,0,7,0,0,0,0,0],
+    ...                   [0,0,0,4,6,2,0,0,0],
+    ...                   [0,8,0,0,0,0,0,0,0],
+    ...                   [0,7,0,0,0,0,3,0,0]])
+    >>> solve_for_timing(sudoku, "forward")
+    >>> print(sudoku)
+    np.array([[1,2,4,3,5,6,8,7,9],
+              [3,5,8,1,7,9,2,4,6],
+              [6,9,7,2,4,8,1,3,5],
+              [2,3,5,6,1,4,7,9,8],
+              [7,4,1,8,9,3,5,6,2],
+              [8,6,9,7,2,5,4,1,3],
+              [5,1,3,9,8,7,6,2,4],
+              [4,8,2,5,6,1,9,3,7],
+              [9,7,6,4,3,2,8,5,1]])
+    @endcode
     """
 
     # Create a markup dataframe of possible values for the sudoku
@@ -43,9 +83,9 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     if bactrack_only:
         markup_1 = st.markup(sudoku)
         for row in range(9):
-                for col in range(9):
-                    if len(markup_1[col][row]) == 1:
-                        sudoku[row][col] = markup_1[col][row][0]
+            for col in range(9):
+                if len(markup_1[col][row]) == 1:
+                    sudoku[row][col] = markup_1[col][row][0]
     else:
         markup_0 = st.markup(sudoku)
         markup_1 = pd.DataFrame(index=range(9), columns=range(9))
@@ -112,10 +152,11 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
         if st.backtrack_alg(sudoku, markup_1, backtrack_cells, 0):
             valid, message = st.check_sudoku(sudoku, True)
             if not valid:
-            # fmt: off
-                raise RuntimeError("The sudoku is no longer valid after markup: "
-                           + message)
-            # fmt: on
+                # fmt: off
+                raise RuntimeError("The sudoku is no longer valid "
+                                   + "after markup: "
+                                   + message)
+                # fmt: on
             return None
         else:
             return None
@@ -135,9 +176,12 @@ for backtracking_type in ["forward", "backward", "ordered"]:
         sudoku = np.array([int(char) for char in sudoku_str]).reshape((9, 9))
 
         # Solve the sudoku using the three types of backtracking, and time it
+        # fmt: off
         start_time = time.time()
-        solution = solve_for_timing(sudoku, backtracking_type, backtracking_only)
+        solution = solve_for_timing(sudoku, backtracking_type,
+                                    backtracking_only)
         end_time = time.time()
+        # fmt: on
 
         duration = end_time - start_time
 
