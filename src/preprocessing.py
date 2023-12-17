@@ -32,6 +32,7 @@ def load_sudoku(path):
     then picks out the numbers from the strings, dropping the separators,
     and returns a 9x9 numpy array of the sudoku.
 
+
     @param path Path to the sudoku txt file
 
     @return A 9x9 numpy array containing the sudoku numbers
@@ -67,6 +68,7 @@ def load_sudoku(path):
               [0,0,0,4,6,2,0,0,0],
               [0,8,0,0,0,0,0,0,0],
               [0,7,0,0,0,0,3,0,0]])
+    @endcode
     """
     # We use os to have relative paths be portable
     proj_dir = os.getcwd()
@@ -197,6 +199,7 @@ def box(sudoku, row, col):
     [[4 6 2]
      [0 0 0]
      [0 0 0]]
+    @endcode
     """
     # Check that the cell coordinates are valid
     try:

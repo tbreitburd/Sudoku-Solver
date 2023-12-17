@@ -82,6 +82,8 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
     513|462|987
     482|937|651
     976|581|324
+    Elapsed time: 0.0856376330 seconds
+    @endcode
     """
 
     input_path = input_file

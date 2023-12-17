@@ -55,6 +55,7 @@ def check_sudoku(sudoku, final_check):
     False
     >>> print(message)
     There are too many 9's in column 7
+    @endcode
     """
     # Check if the sudoku is filled completely:
     if final_check:
@@ -128,6 +129,7 @@ def markup(sudoku):
     6              [1, 3, 5, 9]        [1, 5, 9]              [3, 5, 9]
     7     [1, 2, 3, 4, 5, 6, 9]              [8]        [2, 3, 5, 6, 9]
     8        [1, 2, 4, 5, 6, 9]      ...................................
+    @endcode
     """
     try:
         # Check if the sudoku might have multiple solutions,
@@ -277,7 +279,6 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
               [4,8,2,5,6,1,9,3,7],
               [9,7,6,4,3,2,8,5,1]])
     @endcode
-
     """
 
     # Base case of the recursion, we have reached the end of the sudoku if:
