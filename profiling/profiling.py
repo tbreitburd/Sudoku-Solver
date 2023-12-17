@@ -11,10 +11,12 @@ console, and writes them to a txt file in a directory called "profile".
 On can set it up to profile different functions, by commenting out the
 functions that are not to be profiled.
 
-@example This file can be run from the command line as follows:
-@code
->>> $ python -m profiling.profiling path/to/sudoku.txt 'forward' False
-@endcode
+@param input_file A string, the path to the sudoku input file
+@param backtracking_type A string, either "forward", "backward" or
+"ordered", specifying the type of backtracking to use.
+@param bactracking_only A boolean, specifying whether to only use
+backtracking to solve the sudokus, or to use the candidate checking method
+first.
 
 @author Created by T.Breitburd on 12/2023
 """

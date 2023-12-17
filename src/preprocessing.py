@@ -10,11 +10,6 @@ format is as expected. The box() function is to extract the 3x3 box a cell is
 in, and the sudoku_to_output_format() function is to convert the sudoku array
 back into the .txt file format, for printing and saving the sudoku once solved.
 
-@example sudoku = load_sudoku("path/to/sudoku.txt")
-@example box = box(sudoku, 4, 5)
-@example sudoku_output = sudoku_to_output_format(sudoku)
-
-
 @author Created by T.Breitburd on 19/11/2023
 """
 import os
@@ -32,43 +27,19 @@ def load_sudoku(path):
     then picks out the numbers from the strings, dropping the separators,
     and returns a 9x9 numpy array of the sudoku.
 
-
     @param path Path to the sudoku txt file
 
     @return A 9x9 numpy array containing the sudoku numbers
 
     @exception FileNotFoundError Raised if the sudoku file is not found
+
     @exception ValueError Raised if the sudoku file has an incorrect format,
     this includes incorrect number of rows, columns, separators, and incorrect
     characters for the separators.
 
-    @example This example describes how to use the load_sudoku function.
+    @exception IOError Raised if the sudoku file cannot be opened
 
-    @code
-    $ cat path/to/sudoku.txt
-    004|050|070
-    000|000|000
-    000|008|000
-    ---+---+---
-    030|000|090
-    001|000|000
-    000|700|000
-    ---+---+---
-    000|462|000
-    080|000|000
-    070|000|300
-    >>> sudoku = load_sudoku("path/to/sudoku.txt")
-    >>> print(sudoku)
-    np.array([[0,0,4,0,5,0,0,7,0],
-              [0,0,0,0,0,0,0,0,0],
-              [0,0,0,0,0,8,0,0,0],
-              [0,3,0,0,0,0,0,9,0],
-              [0,0,1,0,0,0,0,0,0],
-              [0,0,0,7,0,0,0,0,0],
-              [0,0,0,4,6,2,0,0,0],
-              [0,8,0,0,0,0,0,0,0],
-              [0,7,0,0,0,0,3,0,0]])
-    @endcode
+
     """
     # We use os to have relative paths be portable
     proj_dir = os.getcwd()
@@ -181,25 +152,6 @@ def box(sudoku, row, col):
 
     @exception ValueError Raised if the cell coordinates are not valid,
     as they must be between 0 and 8 inclusive.
-
-    @example This example describes how to use the box function.
-
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                   [0,0,0,0,0,0,0,0,0],
-    ...                   [0,0,0,0,0,8,0,0,0],
-    ...                   [0,3,0,0,0,0,0,9,0],
-    ...                   [0,0,1,0,0,0,0,0,0],
-    ...                   [0,0,0,7,0,0,0,0,0],
-    ...                   [0,0,0,4,6,2,0,0,0],
-    ...                   [0,8,0,0,0,0,0,0,0],
-    ...                   [0,7,0,0,0,0,3,0,0]])
-    >>> box = box(sudoku, 7, 5)
-    >>> print(box)
-    [[4 6 2]
-     [0 0 0]
-     [0 0 0]]
-    @endcode
     """
     # Check that the cell coordinates are valid
     try:
@@ -254,33 +206,6 @@ def sudoku_to_output_format(sudoku):
 
     @return A string in the format of the output file.
 
-    @example This example describes how to use the sudoku_to_output_format
-    function.
-
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                   [0,0,0,0,0,0,0,0,0],
-    ...                   [0,0,0,0,0,8,0,0,0],
-    ...                   [0,3,0,0,0,0,0,9,0],
-    ...                   [0,0,1,0,0,0,0,0,0],
-    ...                   [0,0,0,7,0,0,0,0,0],
-    ...                   [0,0,0,4,6,2,0,0,0],
-    ...                   [0,8,0,0,0,0,0,0,0],
-    ...                   [0,7,0,0,0,0,3,0,0]])
-    >>> sudoku_output = sudoku_to_output_format(sudoku)
-    >>> print(sudoku_output)
-    004|050|070
-    000|000|000
-    000|008|000
-    ---+---+---
-    030|000|090
-    001|000|000
-    000|700|000
-    ---+---+---
-    000|462|000
-    080|000|000
-    070|000|300
-    @endcode
     """
     # Initialize the output string
     sudoku_str = ""

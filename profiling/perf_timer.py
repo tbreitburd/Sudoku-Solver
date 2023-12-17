@@ -1,5 +1,4 @@
 """!@file perf_timer.py
-
 @brief This file contains the code to time the performance of the
 backtracking algorithm, for different types of backtracking.
 
@@ -10,17 +9,13 @@ and times the performance of the backtracking algorithm
 for each sudoku, for three different types of backtracking:
 forward, backward and ordered.
 
+@param backtracking_only A boolean, specifying whether to only use
+backtracking to solve the sudokus, or to use the candidate checking method
+first.
+
 The sudokus are solved using the backtracking algorithm,
 and the time taken to solve each sudoku is recorded.
 The average time taken for each type of backtracking is then printed.
-
-@example This file can be run from the command line as follows:
-@code
->>> $ python -m profiling.perf_timer False
-Average time taken for forward backtracking: 0.00000000000000000000
-Average time taken for backward backtracking: 0.00000000000000000000
-Average time taken for ordered backtracking: 0.00000000000000000000
-@endcode
 
 @author Created by T.Breitburd on 14/12/2023
 """
@@ -43,6 +38,9 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     @param sudoku A 9x9 numpy array containing the sudoku numbers
     @param backtracking_type A string, either "forward", "backward" or
     "ordered", specifying the type of backtracking to use.
+    @param bactrack_only A boolean, specifying whether to only use
+    backtracking to solve the sudokus, or to use the candidate checking method
+    first.
 
     @return None
 
@@ -52,29 +50,6 @@ def solve_for_timing(sudoku, backtracking_type, bactrack_only):
     @throws RuntimeError if the backtracking algorithm fails to solve the
     sudoku.
 
-    @example This function can be used as follows:
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                   [0,0,0,0,0,0,0,0,0],
-    ...                   [0,0,0,0,0,8,0,0,0],
-    ...                   [0,3,0,0,0,0,0,9,0],
-    ...                   [0,0,1,0,0,0,0,0,0],
-    ...                   [0,0,0,7,0,0,0,0,0],
-    ...                   [0,0,0,4,6,2,0,0,0],
-    ...                   [0,8,0,0,0,0,0,0,0],
-    ...                   [0,7,0,0,0,0,3,0,0]])
-    >>> solve_for_timing(sudoku, "forward")
-    >>> print(sudoku)
-    np.array([[1,2,4,3,5,6,8,7,9],
-              [3,5,8,1,7,9,2,4,6],
-              [6,9,7,2,4,8,1,3,5],
-              [2,3,5,6,1,4,7,9,8],
-              [7,4,1,8,9,3,5,6,2],
-              [8,6,9,7,2,5,4,1,3],
-              [5,1,3,9,8,7,6,2,4],
-              [4,8,2,5,6,1,9,3,7],
-              [9,7,6,4,3,2,8,5,1]])
-    @endcode
     """
 
     # Create a markup dataframe of possible values for the sudoku

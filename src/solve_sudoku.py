@@ -1,4 +1,31 @@
-"""!@file solve_sudoku.py
+"""!@mainpage Sudoku solver using backtracking and candidate checking
+
+This is the documentation for the sudoku solver.
+
+@section intro_sec Introduction
+
+This is a sudoku solver, using a backtracking algorithm, and a candidate
+checking method. It takes in a sudoku in txt format (with specific formatting)
+as input, as well as a backtracking type (forward, backward or ordered), and a
+boolean indicating whether to use only backtracking or not. The solver then
+solves it using a backtracking algorithm, and optionaly a candidate checking
+method. It then returns the solved sudoku in the same format as the input,
+printing it to the console and writing it to a txt file, in a directory called
+"sudoku_solutions". There is a test module, which contains unit tests for the
+solver, it is worth exploring. There is also a profiling module, to profile the
+performance of the solver, and its different functions, especially if one wants
+to further improve this solver.
+
+@section install_sec Installation & Use
+
+To install the solver, simply download the repository, and once in the
+directory in which the solver was placed, run the following command in the
+terminal, from the root of the repository:
+@code
+python -m src.solve_sudoku <input_file> <backtracking_type> <bactracking_only>
+@endcode
+
+@file solve_sudoku.py
 @brief Sudoku solver using backtracking algorithm.
 
 @details Using functions from modules preprocessing.py and solver_tools.py,
@@ -9,6 +36,12 @@ solves it using a backtracking algorithm, and optionaly a candidate
 checking method. It then returns the solved sudoku in the same format
 as the input, printing it to the console and writing it to a txt file,
 in a directory called "sudoku_solutions".
+
+@param input_file Path to the sudoku txt file
+@param backtracking_type Type of backtracking to use (forward, backward
+or ordered)
+@param bactracking_only Boolean indicating whether to use only
+backtracking or not
 
 @author Created by T.Breitburd on 19/11/2023
 """
@@ -52,38 +85,6 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
     after markup, or after backtracking.
     @exception RuntimeError Raised if the backtracking algorithm fails to
     solve the sudoku.
-
-    @example This example describes how to use the solve_sudoku function,
-    within a python script.
-
-    @code
-    $ cat path/to/sudoku.txt
-    104|050|070
-    050|100|000
-    000|008|005
-    ---+---+---
-    030|014|090
-    001|000|502
-    000|700|010
-    ---+---+---
-    003|462|000
-    080|030|000
-    070|501|300
-
-    >>> solve_sudoku("path/to/sudoku.txt", "ordered", True)
-    124|356|879
-    358|179|246
-    697|248|135
-    ---+---+---
-    235|614|798
-    741|893|562
-    869|725|413
-    ---+---+---
-    513|462|987
-    482|937|651
-    976|581|324
-    Elapsed time: 0.0856376330 seconds
-    @endcode
     """
 
     input_path = input_file
