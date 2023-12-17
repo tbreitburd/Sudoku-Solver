@@ -1,5 +1,6 @@
 var searchData=
 [
+<<<<<<< Updated upstream
   ['s_0',['s',['../namespaceprofiling.html#ae9e4273397d4a1a9071436b26ade6b4a',1,'profiling']]],
   ['solution_1',['solution',['../namespaceperf__timer.html#af6812137531e377df8828e7ce6e69772',1,'perf_timer']]],
   ['solve_5ffor_5ftiming_2',['solve_for_timing',['../namespaceperf__timer.html#a95bd7f7c947df78bfd192cf1f4e6f8f8',1,'perf_timer']]],
@@ -21,4 +22,8 @@ var searchData=
   ['sudoku_5fgood_18',['sudoku_good',['../namespacetest_1_1test__check__sudoku.html#a4f950f7a9e66970e683e2ea3c4283311',1,'test::test_check_sudoku']]],
   ['sudoku_5fsolved_19',['sudoku_solved',['../namespacetest_1_1test__backtrack.html#abb5045dab811caa0e102eec24a4207bc',1,'test::test_backtrack']]],
   ['sudokus_5fdf_20',['sudokus_df',['../namespaceperf__timer.html#a760ecf01e12220a8ede65918d34fd901',1,'perf_timer']]]
+=======
+  ['markup_0',['markup',['../namespacesrc_1_1solver__tools.html#a0d4eebf33821b84347ce82e3f7a4ce76',1,'src::solver_tools']]],
+  ['markup1_1',['markup1',['../namespacetest_1_1test__backtrack.html#a68bbf9df498bfa5af9bfadf23b7ee30f',1,'test::test_backtrack']]]
+>>>>>>> Stashed changes
 ];

@@ -74,7 +74,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">preprocessing.py File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -88,10 +89,23 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacesrc_1_1preprocessing" id="r_namespacesrc_1_1preprocessing"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html">src.preprocessing</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab34082599b6c8c5a2d7469f8797f24d5" id="r_ab34082599b6c8c5a2d7469f8797f24d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#ab34082599b6c8c5a2d7469f8797f24d5">src.preprocessing.load_sudoku</a> (path)</td></tr>
+<tr class="memdesc:ab34082599b6c8c5a2d7469f8797f24d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the sudoku .txt file into a useable Numpy array.  <br /></td></tr>
+<tr class="separator:ab34082599b6c8c5a2d7469f8797f24d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ebf7ad27d279d432c3e353502dcbfa6" id="r_a1ebf7ad27d279d432c3e353502dcbfa6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#a1ebf7ad27d279d432c3e353502dcbfa6">src.preprocessing.box</a> (sudoku, row, col)</td></tr>
+<tr class="memdesc:a1ebf7ad27d279d432c3e353502dcbfa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a sudoku and a cell's row and column, and returns a 3x3 array of the sudoku box that cell is in.  <br /></td></tr>
+<tr class="separator:a1ebf7ad27d279d432c3e353502dcbfa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121ff6a289113901f45b8f70e0b08e99" id="r_a121ff6a289113901f45b8f70e0b08e99"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1preprocessing.html#a121ff6a289113901f45b8f70e0b08e99">src.preprocessing.sudoku_to_output_format</a> (sudoku)</td></tr>
+<tr class="memdesc:a121ff6a289113901f45b8f70e0b08e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a sudoku array, and returns a string in the specific format of the output file.  <br /></td></tr>
+<tr class="separator:a121ff6a289113901f45b8f70e0b08e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Module containing tools for preprocessing and post_processing the sudoku. </p>
-<p>This module contains tools to process the sudokus. It contains 3 functions that only focus on getting the sudoku from txt file to array form and inversely, and to get the 3x3 box the current cell is in. In other words, no function in this module does any modification to the sudoku. One function is to load the sudoku txt file information into a useable array, checking that the format is as expected. The box() function is to extract the 3x3 box a cell is in, and the sudoku_to_output_format() function is to convert the sudoku array back into the .txt file format, for printing and saving the sudoku once solved. </p>
+<p>This module contains tools to process the sudokus. It contains 3 functions that only focus on getting the sudoku from txt file to array form and inversely, and to get the 3x3 box the current cell is in. In other words, no function in this module does any modification to the sudoku. One function is to load the sudoku txt file information into a useable array, checking that the format is as expected. The box() function is to extract the 3x3 box a cell is in, and the sudoku_to_output_format() function is to convert the sudoku array back into the .txt file format, for printing and saving the sudoku once solved.</p>
+<dl class="section author"><dt>Author</dt><dd>Created by T.Breitburd on 19/11/2023 </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

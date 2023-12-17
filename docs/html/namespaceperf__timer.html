@@ -143,11 +143,27 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sudoku</td><td>A 9x9 numpy array containing the sudoku numbers </td></tr>
+<<<<<<< Updated upstream
     <tr><td class="paramname">backtracking_type</td><td>A string, either "forward", "backward" or "ordered", specifying the type of backtracking to use.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>None </dd></dl>
+=======
+    <tr><td class="paramname">backtracking_type</td><td>A string, either "forward", "backward" or "ordered", specifying the type of backtracking to use. </td></tr>
+    <tr><td class="paramname">bactrack_only</td><td>A boolean, specifying whether to only use backtracking to solve the sudokus, or to use the candidate checking method first.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>None</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">RuntimeError</td><td>if the sudoku is no longer valid after the markup and the backtracking algorithm is applied.</td></tr>
+    <tr><td class="paramname">RuntimeError</td><td>if the backtracking algorithm fails to solve the sudoku. </td></tr>
+  </table>
+  </dd>
+</dl>
+>>>>>>> Stashed changes
 
 </div>
 </div>

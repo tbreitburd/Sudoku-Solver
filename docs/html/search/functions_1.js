@@ -1,19 +1,4 @@
 var searchData=
 [
-  ['test_5fbacktrack_0',['test_backtrack',['../classtest_1_1test__backtrack_1_1_test_backtrack.html#a42bb9cdcb73be4db727fec311f60f21d',1,'test::test_backtrack::TestBacktrack']]],
-  ['test_5fbacktrack_5f2_1',['test_backtrack_2',['../namespacetest_1_1test__backtrack.html#a7e7252178cfaa8277e27ac7b5b6453ad',1,'test::test_backtrack']]],
-  ['test_5fbacktrack_5f3_2',['test_backtrack_3',['../namespacetest_1_1test__backtrack.html#a553b1b4ae79a999b6b9a7923679a0533',1,'test::test_backtrack']]],
-  ['test_5fbox_3',['test_box',['../namespacetest_1_1test__preproc.html#aa4f7d24ccb4309e05ab5cb213db0816c',1,'test::test_preproc']]],
-  ['test_5fbox2_4',['test_box2',['../classtest_1_1test__preproc_1_1_test_box.html#a32e7e4bfc8bfc63937b1378547e536c6',1,'test::test_preproc::TestBox']]],
-  ['test_5fcheck_5fsudoku_5',['test_check_sudoku',['../namespacetest_1_1test__check__sudoku.html#ad6522d0e46e8a52a555194eb7167b579',1,'test::test_check_sudoku']]],
-  ['test_5fcheck_5fsudoku2_6',['test_check_sudoku2',['../namespacetest_1_1test__check__sudoku.html#a53ef1a888decd4c612f393c993fbb38c',1,'test::test_check_sudoku']]],
-  ['test_5fcheck_5fsudoku3_7',['test_check_sudoku3',['../namespacetest_1_1test__check__sudoku.html#a50586eebecc681e42ec5db8a21c15659',1,'test::test_check_sudoku']]],
-  ['test_5fcheck_5fsudoku5_8',['test_check_sudoku5',['../namespacetest_1_1test__check__sudoku.html#a246dd6467d89115563b138ad285d5bae',1,'test::test_check_sudoku']]],
-  ['test_5fload_5fsudoku_9',['test_load_sudoku',['../namespacetest_1_1test__preproc.html#ac6f662e2a05c6799f945801436800d45',1,'test::test_preproc']]],
-  ['test_5fload_5fsudoku2_10',['test_load_sudoku2',['../classtest_1_1test__preproc_1_1_test_load_function.html#ac0e3da6d2ad8f90d9515f2eab75afbcc',1,'test::test_preproc::TestLoadFunction']]],
-  ['test_5fmarkup_11',['test_markup',['../namespacetest_1_1test__markup.html#a86f6a791d6c681c43fedc5b8d13f68e0',1,'test::test_markup']]],
-  ['test_5fmarkup_5f2_12',['test_markup_2',['../classtest_1_1test__markup_1_1_test_markup.html#a99d544ab3cebbdcfb56a98fdf0cad3f6',1,'test::test_markup::TestMarkup']]],
-  ['test_5fmarkup_5f3_13',['test_markup_3',['../classtest_1_1test__markup_1_1_test_markup.html#ac1bb9d8a87326deb13389cb5cdcf7751',1,'test::test_markup::TestMarkup']]],
-  ['test_5fmarkup_5f4_14',['test_markup_4',['../classtest_1_1test__markup_1_1_test_markup.html#a9e259ba4f78acd9e24cb57f18726c30f',1,'test::test_markup::TestMarkup']]],
-  ['test_5fsudoku_5fto_5foutput_5fformat_15',['test_sudoku_to_output_format',['../namespacetest_1_1test__preproc.html#aed16b2834c6e2a12bf51b3c5732d148e',1,'test::test_preproc']]]
+  ['check_5fsudoku_0',['check_sudoku',['../namespacesrc_1_1solver__tools.html#a23fda9c72f3df84d14f63c5a0250d0ba',1,'src::solver_tools']]]
 ];

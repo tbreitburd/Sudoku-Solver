@@ -38,24 +38,7 @@ def check_sudoku(sudoku, final_check):
     @return A boolean, True if the sudoku is valid, False if it is not.
     And a string, containing a message explaining why the sudoku is not valid.
 
-    @example This example describes how to use the check_sudoku function.
 
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                    [0,0,0,0,0,0,0,0,0],
-    ...                    [0,0,0,0,0,8,0,0,0],
-    ...                    [0,3,0,0,0,0,0,9,0],
-    ...                    [0,0,1,0,0,0,0,9,0],
-    ...                    [0,0,0,7,0,0,0,0,0],
-    ...                    [0,0,0,4,6,2,0,0,0],
-    ...                    [0,8,0,0,0,0,0,0,0],
-    ...                    [0,7,0,0,0,0,3,0,0]])
-    >>> check, message = check_sudoku(sudoku, False)
-    >>> print(check)
-    False
-    >>> print(message)
-    There are too many 9's in column 7
-    @endcode
     """
     # Check if the sudoku is filled completely:
     if final_check:
@@ -105,31 +88,6 @@ def markup(sudoku):
     @exception RuntimeError Raised if the sudoku is not solvable,
     already solved, or there may be a disagreement between the arguments.
 
-    @example This example describes how to use the markup function.
-
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                   [0,0,0,0,0,0,0,0,0],
-    ...                   [0,0,0,0,0,8,0,0,0],
-    ...                   [0,3,0,0,0,0,0,9,0],
-    ...                   [0,0,1,0,0,0,0,0,0],
-    ...                   [0,0,0,7,0,0,0,0,0],
-    ...                   [0,0,0,4,6,2,0,0,0],
-    ...                   [0,8,0,0,0,0,0,0,0],
-    ...                   [0,7,0,0,0,0,3,0,0]])
-    >>> markup_ = markup(sudoku)
-    >>> print(markup_)
-                             0                1                      2  \
-    0        [1, 2, 3, 6, 8, 9]     [1, 2, 6, 9]                    [4]
-    1  [1, 2, 3, 5, 6, 7, 8, 9]  [1, 2, 5, 6, 9]  [2, 3, 5, 6, 7, 8, 9]
-    2     [1, 2, 3, 5, 6, 7, 9]  [1, 2, 5, 6, 9]     [2, 3, 5, 6, 7, 9]
-    3        [2, 4, 5, 6, 7, 8]              [3]        [2, 5, 6, 7, 8]
-    4     [2, 4, 5, 6, 7, 8, 9]  [2, 4, 5, 6, 9]                    [1]
-    5        [2, 4, 5, 6, 8, 9]  [2, 4, 5, 6, 9]        [2, 5, 6, 8, 9]
-    6              [1, 3, 5, 9]        [1, 5, 9]              [3, 5, 9]
-    7     [1, 2, 3, 4, 5, 6, 9]              [8]        [2, 3, 5, 6, 9]
-    8        [1, 2, 4, 5, 6, 9]      ...................................
-    @endcode
     """
     try:
         # Check if the sudoku might have multiple solutions,
@@ -250,35 +208,7 @@ def backtrack_alg(sudoku, markup_, backtrack_cells, cell_num):
     @exception RuntimeError Raised if the sudoku is not solvable,
     already solved, or there may be a disagreement between the arguments.
 
-    @example This example describes how to use the backtrack_alg function.
 
-    @code
-    >>> sudoku = np.array([[0,0,4,0,5,0,0,7,0],
-    ...                   [0,0,0,0,0,0,0,0,0],
-    ...                   [0,0,0,0,0,8,0,0,0],
-    ...                   [0,3,0,0,0,0,0,9,0],
-    ...                   [0,0,1,0,0,0,0,0,0],
-    ...                   [0,0,0,7,0,0,0,0,0],
-    ...                   [0,0,0,4,6,2,0,0,0],
-    ...                   [0,8,0,0,0,0,0,0,0],
-    ...                   [0,7,0,0,0,0,3,0,0]])
-    >>> markup_ = markup(sudoku)
-    >>> backtrack_cells = np.where(markup_1.map(len) > 1)
-    >>> backtrack_cells = np.array([backtrack_cells[1],
-    ...                             backtrack_cells[0]]).T
-    >>> backtrack_alg(sudoku, markup_, backtrack_cells, 0)
-    True
-    >>> print(sudoku)
-    np.array([[1,2,4,3,5,6,8,7,9],
-              [3,5,8,1,7,9,2,4,6],
-              [6,9,7,2,4,8,1,3,5],
-              [2,3,5,6,1,4,7,9,8],
-              [7,4,1,8,9,3,5,6,2],
-              [8,6,9,7,2,5,4,1,3],
-              [5,1,3,9,8,7,6,2,4],
-              [4,8,2,5,6,1,9,3,7],
-              [9,7,6,4,3,2,8,5,1]])
-    @endcode
     """
 
     # Base case of the recursion, we have reached the end of the sudoku if:

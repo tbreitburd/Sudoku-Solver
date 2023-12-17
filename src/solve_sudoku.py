@@ -10,6 +10,12 @@ checking method. It then returns the solved sudoku in the same format
 as the input, printing it to the console and writing it to a txt file,
 in a directory called "sudoku_solutions".
 
+@param input_file Path to the sudoku txt file
+@param backtracking_type Type of backtracking to use (forward, backward
+or ordered)
+@param bactracking_only Boolean indicating whether to use only
+backtracking or not
+
 @author Created by T.Breitburd on 19/11/2023
 """
 
@@ -53,37 +59,7 @@ def solve_sudoku(input_file, backtracking_type, bactracking_only):
     @exception RuntimeError Raised if the backtracking algorithm fails to
     solve the sudoku.
 
-    @example This example describes how to use the solve_sudoku function,
-    within a python script.
 
-    @code
-    $ cat path/to/sudoku.txt
-    104|050|070
-    050|100|000
-    000|008|005
-    ---+---+---
-    030|014|090
-    001|000|502
-    000|700|010
-    ---+---+---
-    003|462|000
-    080|030|000
-    070|501|300
-
-    >>> solve_sudoku("path/to/sudoku.txt", "ordered", True)
-    124|356|879
-    358|179|246
-    697|248|135
-    ---+---+---
-    235|614|798
-    741|893|562
-    869|725|413
-    ---+---+---
-    513|462|987
-    482|937|651
-    976|581|324
-    Elapsed time: 0.0856376330 seconds
-    @endcode
     """
 
     input_path = input_file
