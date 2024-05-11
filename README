@@ -1,24 +1,24 @@
-# C1 Coursework - Sudoku Solver
+# Backtracking Sudoku Solver
 
 ## Description
-This reporsitory contains the code and written report for the C1 Coursework. The aim was to demonstrate software developping good practice applied to the development of a sudoku solver.
+This reporsitory contains the code for the Sudoku Solver and a report detailing the process of developping the solver. The aim was to demonstrate software developping good practice applied to the development of a sudoku solver.
 
 ## Contents
 
-Inside this ```tmb76/``` directory, there are a few sub-directories one can explore. The s the code directory (```src/```), which contains all the code used in the solver. The second is the sudokus directory (```sudokus/```), which contains a few sudokus one can use if they don't have sudokus ready. An important note is that the solver will give the solutions in the command line but also store them in a ```sudoku_solutions/``` directory which will be created as the first sudoku is solved. So if there is no ```sudoku_solutions/``` directory in the repository yet, running the solver once should lead to creating one. Then comes the ```profiling/``` directory, which simply enables one to do some profiling on the solver if one were inclined to further improve this solver. It is by no means, the best of the many that exists. The last one is the ```report/``` directory, which contains the LaTeX file for the report, as well as the pdf version of it, along with the references ```.bib``` file.
+Inside this ```Sudoku_Solver/``` directory, there are a few sub-directories one can explore. The s the code directory (```src/```), which contains all the code used in the solver. The second is the sudokus directory (```sudokus/```), which contains a few sudokus one can use if they don't have sudokus ready. An important note is that the solver will give the solutions in the command line but also store them in a ```sudoku_solutions/``` directory which will be created as the first sudoku is solved. So if there is no ```sudoku_solutions/``` directory in the repository yet, running the solver once should lead to creating one. Then comes the ```profiling/``` directory, which simply enables one to do some profiling on the solver if one were inclined to further improve this solver. It is by no means, the best of the many that exists. The last one is the ```report/``` directory, which contains the LaTeX file for the report, as well as the pdf version of it, along with the references ```.bib``` file.
 More importantly, there are an ```environment.yml``` file and a ```Dockerfile```, which uses it, which one is advised to use.
 
 ## How to run the code
-For permissions reasons, the ```Dockerfile``` is not set up to pull the repository directly as it builds the image. Therefore, one must first download this repository to their local machine and then are free to build the Docker image from the ```Dockerfile```.
+For permissions reasons, the ```Dockerfile``` was not set up to pull the repository directly as it builds the image. Therefore, one must first download this repository to their local machine and then are free to build the Docker image from the ```Dockerfile```.
 
 To run the solver on a Docker container, one first has to build the image and run the container. This can be done as follows:
 
 ```bash
-$ docker build -t c1_coursework
-$ docker run --rm -ti c1_coursework
+$ docker build -t sudoku_solver
+$ docker run --rm -ti sudoku_solver
 ```
 
-The ```c1_coursework``` is not a strict instruction, it can be set to any other name the user may prefer.
+The ```sudoku_solver``` is not a strict instruction, it can be set to any other name the user may prefer.
 
 If there is a need to get the sudoku solutions back on the local machine, the second line above can be ran without the ```--rm``` and also set the container name using ```--name=container_name``` (any valid name is fine). From there, run all the code as instructed below. Once all desired sudokus have been solved. One can exit the container and then run:
 
